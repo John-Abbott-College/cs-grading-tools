@@ -1,14 +1,17 @@
-# cs-grading-tools documentation
+# CS Grading Tools
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+This is a repository to organize documentation and API reference for a grading library written by Ian and Sandy, and maybe other ones too.
+
+Hopefully this will also have a tutorial, geared for SN1 but perhaps 6P3 as well.
 
 ```{toctree}
 :maxdepth: 2
 :caption: Contents:
+:hidden:
+:glob:
 
-source/usage
+source/grading_tools/README
+source/grading_tools/usage
+source/grading_tools/reference
 apidocs/index
 ```
-

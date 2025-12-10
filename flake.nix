@@ -1,42 +1,52 @@
 {
   description = "Develop Python on Nix with uv";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  };
+  inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11"; };
 
-  outputs =
-    { nixpkgs, ... }:
+  outputs = { nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
       forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-    in
-    {
-      devShells = forAllSystems (
-        system:
+    in {
+      devShells = forAllSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
+          pythonEnvPkgs = with pkgs; [
+            python314
+            uv # Modern Python dependency manager replacing virtualenv and pip
+          ];
+          pythonCLibraries = with pkgs; [
+            # On Nix at least, a few C-libraries are needed explicitly for LD path.
+            gcc
+            stdenv.cc.cc.lib
+            zlib
+            libglvnd
+            libxkbcommon
+            fontconfig
+            libx11
+            glib
+            freetype
+            zstd
+            dbus
+            libxcb-cursor
+            wayland
+          ];
+          allPackages = pythonEnvPkgs ++ pythonCLibraries;
+
+        in {
           default = pkgs.mkShell {
-            packages = [
-              pkgs.python3
-              pkgs.uv
-            ];
-
-            env = lib.optionalAttrs pkgs.stdenv.isLinux {
-              # Python libraries often load native shared objects using dlopen(3).
-              # Setting LD_LIBRARY_PATH makes the dynamic library loader aware of libraries without using RPATH for lookup.
-              LD_LIBRARY_PATH = lib.makeLibraryPath pkgs.pythonManylinuxPackages.manylinux1;
-            };
-
+            packages = allPackages;
             shellHook = ''
+              # Inspired by: https://github.com/miklevin/python_nix_flake/blob/main/flake.nix#L138
+              export LD_LIBRARY_PATH=${
+                pkgs.lib.makeLibraryPath allPackages
+              }:$LD_LIBRARY_PATH
+              export QT_QPA_PLATFORM="wayland"
               unset PYTHONPATH
               uv sync
               . .venv/bin/activate
             '';
           };
-        }
-      );
+        });
     };
 }
