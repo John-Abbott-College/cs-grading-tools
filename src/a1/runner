@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s nullglob
+
+GRADING_DIR="A1"
+SCRIPT_PATH="../../AutoGrading/evaluation.py"
+
+###################################
+### Script ###
+### Adapted from: https://stackoverflow.com/questions/7470165/how-to-go-to-each-directory-and-execute-a-command/37582596#37582596
+###################################
+
+#Save current directory so we can restore it later
+cur=$PWD
+#Save command line arguments so functions can access it
+args=("$@")
+
+#Put your code in this function
+#To access command line arguments use syntax ${args[1]} etc
+function dir_command {
+  read -p "Grade ${1}? y/n: " grade_this_dir
+  if [[ ${grade_this_dir} == "y" ]]; then
+    cd "${1}"
+    python "${SCRIPT_PATH}"
+    cd "$cur"
+  else
+    echo "Skipping to next dir."
+  fi
+}
+
+mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+for D in "${dirs[@]}"; do dir_command "${D}"; done
+
+#Restore the folder
+cd "$cur"
