@@ -17,6 +17,7 @@ manual_test_results = dict()
 
 grading = Grading()
 
+
 def run_manual_tests():
     section_coding_quality = grading.add_section("Coding Quality", 0, -1)
     section_edits_required = grading.add_section("Edits required", -1)
@@ -28,13 +29,18 @@ def run_manual_tests():
     section_coding_quality.ask_question(
         "Did you use variable names instead of numbers?",
         "Use the variables given, not the actual numbers (using numbers makes it harder to read what your code is doing, "
-        "and is more prone to mistakes)", 1)
+        "and is more prone to mistakes)",
+        1,
+    )
     section_coding_quality.ask_question_with_feedback("No dead (unused) code?", 1)
 
     # Edits required
     section_edits_required.ask_question_with_feedback(
         "Were major edits required to get the code to work properly?"
-        "Major edits were required to get the code to work properly.", 1)
+        "Major edits were required to get the code to work properly.",
+        1,
+    )
+
 
 # ===============================================================================
 # ENTRY POINT
@@ -54,14 +60,14 @@ if __name__ == "__main__":
     manual_grading_answers = f"{path}test_answers.txt"
     if not os.path.exists(manual_grading_answers):
         run_manual_tests()
-        with open (manual_grading_answers,"w",encoding='utf-8') as fh:
+        with open(manual_grading_answers, "w", encoding="utf-8") as fh:
             print(str(grading), file=fh)
 
     else:
         ans = input("Do you want to re-answer questions? ")
         if "y" in ans:
             run_manual_tests()
-            with open (manual_grading_answers,"w",encoding='utf-8') as fh:
+            with open(manual_grading_answers, "w", encoding="utf-8") as fh:
                 print(str(grading), file=fh)
 
     grading = Grading.de_serialize(manual_grading_answers)

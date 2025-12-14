@@ -12,7 +12,7 @@ OUTPUT_COMMENTS: list[tuple[range, str]] = [
     (range(80, 90), "Great!"),
     (range(70, 80), "Good!"),
     (range(60, 70), "Good."),
-    (range(0, 60), "See me and we can go over this assignment.")
+    (range(0, 60), "See me and we can go over this assignment."),
 ]
 
 
@@ -24,14 +24,16 @@ class Student:
     :param submission_date: datetime object
     :days_late: float
     """
+
     id: str
     name: str
     submission_date: datetime
     days_late: float
 
 
-def get_student_info_from_lea(folder_name: str,
-                              due_date: Optional[datetime] = None) -> Student:
+def get_student_info_from_lea(
+    folder_name: str, due_date: Optional[datetime] = None
+) -> Student:
     """
     parse student folder name from LEA to create
     :param due_date: date the assignment was due
@@ -43,7 +45,7 @@ def get_student_info_from_lea(folder_name: str,
         student_name: str = match.groups()[0]
         submitted_str = match.groups()[2]
         try:
-            submitted: datetime = datetime.strptime(submitted_str, '%Y-%m-%d_%Hh%Mm%Ss')
+            submitted: datetime = datetime.strptime(submitted_str, "%Y-%m-%d_%Hh%Mm%Ss")
         except ValueError:
             submitted: datetime = datetime(2000, 1, 0, 1)
     else:
@@ -55,13 +57,19 @@ def get_student_info_from_lea(folder_name: str,
         days_late = late.days + late.seconds / (24 * 60 * 60)
         days_late = days_late if days_late > 0 else 0
 
-    student = Student(id=student_id, name=student_name,
-                      submission_date=submitted, days_late=days_late)
+    student = Student(
+        id=student_id, name=student_name, submission_date=submitted, days_late=days_late
+    )
     return student
 
 
 # ----------------------------------------------------------------------------------------
-def give_feedback(student: Student, evaluation: Grading, source_files: list[str] = None, file_prefix: str = ""):
+def give_feedback(
+    student: Student,
+    evaluation: Grading,
+    source_files: list[str] = None,
+    file_prefix: str = "",
+):
     feedback_file = f"{file_prefix}{student.id}_{student.name}"
     feedback_file += ".md"
 
@@ -73,7 +81,10 @@ def give_feedback(student: Student, evaluation: Grading, source_files: list[str]
 # print
 # =============================================================================
 
-def print_evaluation(student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None):
+
+def print_evaluation(
+    student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
+):
     if source_files is None:
         source_files = []
 
@@ -90,13 +101,23 @@ def print_evaluation(student: Student, evaluation: Grading, file: TextIO = sys.s
     final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
 
     file.write(formatter.header())
-    file.write(formatter.title(title=evaluation.title, score=final_grade, weight=evaluation.out_of()))
-    file.write(formatter.student_info(student=student, evaluation=evaluation, comment=comment))
+    file.write(
+        formatter.title(
+            title=evaluation.title, score=final_grade, weight=evaluation.out_of()
+        )
+    )
+    file.write(
+        formatter.student_info(student=student, evaluation=evaluation, comment=comment)
+    )
 
     # print sections and deductions
     file.write(formatter.result_header())
     for section in evaluation.sections:
-        file.write(formatter.section_header(name=section.name, score=section.grade(), weight=section.weight))
+        file.write(
+            formatter.section_header(
+                name=section.name, score=section.grade(), weight=section.weight
+            )
+        )
         for d in section.deductions:
             file.write(formatter.deduction(feedback=d.feedback, weight=d.deduction))
 
@@ -126,15 +147,15 @@ class MarkDownFormat:
     @staticmethod
     def student_info(student: Student, evaluation: Grading, comment: str) -> str:
         late_penalty = evaluation.late_penalty()
-        final_grade = max(evaluation.grade() - evaluation.late_penalty(),0)
+        final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
         return f"""
-|           |                                     |
-|-----------|-------------------------------------|
-| StudentID | {student.id}                                |
-| Name      | {student.name}                              |
-| Submitted | {student.submission_date}                              |
-| Late      | -{evaluation.late_penalty(): .2f}   ({student.days_late: .2f} days)         |
-| Grade     | {evaluation.grade():.2f} - {evaluation.late_penalty(): .2f} |
+|                 |                                                                                                   |
+|-----------------|---------------------------------------------------------------------------------------------------|
+| StudentID       | {student.id}                                                                                      |
+| Name            | {student.name}                                                                                    |
+| Submitted       | {student.submission_date}                                                                         |
+| Late            | -{evaluation.late_penalty(): .2f}   ({student.days_late: .2f} days)                               |
+| Grade           | {evaluation.grade():.2f} - {evaluation.late_penalty(): .2f}                                       |
 | Final Grade     | {final_grade:.2f} out of {evaluation.out_of()} ({final_grade / evaluation.out_of() * 100: 3.2f}%) |
 
 **Comment**

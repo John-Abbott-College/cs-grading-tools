@@ -49,7 +49,7 @@ class Grading:
     @classmethod
     def de_serialize(cls, filename):
         grade = cls()
-        with open(filename, "r", encoding='utf-8') as fh:
+        with open(filename, "r", encoding="utf-8") as fh:
             for line in map(str.rstrip, fh):
                 if line == "":
                     continue
@@ -59,8 +59,12 @@ class Grading:
                 if ":" in line:
                     section, deduction = line.split(":", maxsplit=1)
 
-                section_name, section_max, section_min = section.split(Section.separator)
-                section = grade.add_section(section_name, int(section_max), int(section_min))
+                section_name, section_max, section_min = section.split(
+                    Section.separator
+                )
+                section = grade.add_section(
+                    section_name, int(section_max), int(section_min)
+                )
 
                 if deduction is not None:
                     deduction_amt, deduction_descr = deduction.split(":", maxsplit=1)
@@ -93,7 +97,7 @@ class Section:
         return ans
 
     def add_result(self, response, grade: float):
-        response = response.replace("\n","<br>")
+        response = response.replace("\n", "<br>")
         self.deductions.append(Deductions(grade, response))
         print(response)
 
@@ -107,8 +111,14 @@ class Section:
         self.deductions.clear()
 
     def __str__(self):
-        section_info = Section.separator.join((self.name,str(self.max_grade),str(self.min_grade)))
-        return section_info+"\n"+"\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
+        section_info = Section.separator.join(
+            (self.name, str(self.max_grade), str(self.min_grade))
+        )
+        return (
+            section_info
+            + "\n"
+            + "\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
+        )
 
 
 @dataclass

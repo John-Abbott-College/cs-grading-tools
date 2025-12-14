@@ -50,4 +50,3 @@ def get_func_calls(caller: Callable) -> list[str]:
 
 def contains_func(student_code: Module, func_name: str) -> bool:
     return hasattr(student_code, func_name)
-

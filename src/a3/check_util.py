@@ -24,8 +24,11 @@ elif platform.system() == "Darwin":  # mac
 elif platform.system() == "Linux":
     linter = "/user/local/bin/pylint"
 
-def lea_file_name_to_days_late(name, due_date,due_month,due_time):
+
+def lea_file_name_to_days_late(name, due_date, due_month, due_time):
     pass
+
+
 def modify_and_import(module_name, modification_func):
     """Read in a module, and function that modifies the source code
     and import it.
@@ -42,19 +45,19 @@ def modify_and_import(module_name, modification_func):
     source = spec.loader.get_source(module_name)
     new_source = modification_func(source)
     module = importlib.util.module_from_spec(spec)
-    codeobj = compile(new_source, module.__spec__.origin, 'exec')
+    codeobj = compile(new_source, module.__spec__.origin, "exec")
     exec(codeobj, module.__dict__)
     sys.modules[module_name] = module
     return module
 
 
-def run_top_level_code_return_output(file, modification_func = lambda x:x):
+def run_top_level_code_return_output(file, modification_func=lambda x: x):
     module_name = os.path.splitext(file)[0]
     spec = importlib.util.find_spec(module_name, None)
     source = spec.loader.get_source(module_name)
     new_source = modification_func(source)
     module = importlib.util.module_from_spec(spec)
-    codeobj = compile(new_source, module.__spec__.origin, 'exec')
+    codeobj = compile(new_source, module.__spec__.origin, "exec")
     sys.stdin = StringIO()
     sys.stdout = StringIO()
     exec(codeobj, module.__dict__)
@@ -63,8 +66,6 @@ def run_top_level_code_return_output(file, modification_func = lambda x:x):
     sys.stdin = sys.__stdin__
     sys.stdout = sys.__stdout__
     return output
-
-
 
 
 class InputException(Exception):
@@ -96,14 +97,16 @@ class InputIterator:
             return next(self.it)
         except StopIteration:
             raise InputException(
-                f"Your program asks for input too many times. " +
-                f"Please re-read the question, it only asks for {len(self.data)} inputs.")
+                f"Your program asks for input too many times. "
+                + f"Please re-read the question, it only asks for {len(self.data)} inputs."
+            )
 
     def done(self):
         if self.count < len(self.data):
             raise InputException(
-                f"Your program asks for input too few times.  Please re-read the question, " +
-                f"it asks for {len(self.data)} inputs.")
+                f"Your program asks for input too few times.  Please re-read the question, "
+                + f"it asks for {len(self.data)} inputs."
+            )
 
 
 def how_many_parameters_in_function(foo: Callable) -> int:
@@ -115,8 +118,11 @@ def how_many_parameters_in_function(foo: Callable) -> int:
 def explicit_return_in_function(foo: Callable) -> bool:
     import ast
     import inspect
-    return any(isinstance(node, ast.Return) for node in ast.walk(ast.parse(inspect.getsource(foo))))
 
+    return any(
+        isinstance(node, ast.Return)
+        for node in ast.walk(ast.parse(inspect.getsource(foo)))
+    )
 
 
 def import_file(f: str):
@@ -184,7 +190,8 @@ def ensure_no_top_level_io(m: str):
         raise TopLevelCodeIOException(
             "You have written code outside of the `main()` function.\n\nRemember that to write all your code "
             "between the line `def main():` and `if __name__ == ...` and each line has to be indented by "
-            "at least 4 spaces!\n")
+            "at least 4 spaces!\n"
+        )
 
     sys.stdout.seek(0)
     lines = sys.stdout.readlines()
@@ -195,10 +202,13 @@ def ensure_no_top_level_io(m: str):
         raise TopLevelCodeIOException(
             "You have written code outside of the `main()` function.\n\nRemember that to write all your code "
             "between the line `def main():` and `if __name__ == ...` and each line has to be indented by "
-            "at least 4 spaces!\n")
+            "at least 4 spaces!\n"
+        )
 
 
-def check_match_exact(expected: list[str], actual: list[str], skip_empty_lines: bool = False):
+def check_match_exact(
+    expected: list[str], actual: list[str], skip_empty_lines: bool = False
+):
     """Check for an exact match between expected output and actual output. Uses diff to report the differences.
     Raises a CheckException with the difference if there is one."""
     in_expected: list[tuple[int, str]] = []
@@ -206,9 +216,11 @@ def check_match_exact(expected: list[str], actual: list[str], skip_empty_lines: 
 
     line_actual: int = 0
     line_expected: int = 0
-    for d in difflib.ndiff(expected, actual,
-                           linejunk=lambda l: l.strip() == "" if skip_empty_lines else lambda _: False):
-
+    for d in difflib.ndiff(
+        expected,
+        actual,
+        linejunk=lambda l: l.strip() == "" if skip_empty_lines else lambda _: False,
+    ):
         match d[0:2]:
             case "  ":
                 line_expected += 1
@@ -229,17 +241,19 @@ def check_match_exact(expected: list[str], actual: list[str], skip_empty_lines: 
         return
 
     in_actual_text = "\n".join(map(lambda t: f"{t[0]:>4}| {t[1]}", in_actual))
-    in_expected_text = "\n".join(
-        map(lambda t: f"{t[0]:>4}| {t[1]}", in_expected))
+    in_expected_text = "\n".join(map(lambda t: f"{t[0]:>4}| {t[1]}", in_expected))
 
     if len(in_actual) == 0:
         raise CheckException(
-            f"I was expecting more output: \n\nLine\n{in_expected_text}\n")
+            f"I was expecting more output: \n\nLine\n{in_expected_text}\n"
+        )
     if len(in_expected) == 0:
         raise CheckException(
-            f"I was expecting less output: \n\nLine\n{in_actual_text}\n")
+            f"I was expecting less output: \n\nLine\n{in_actual_text}\n"
+        )
     raise CheckException(
-        f"I was expecting:\n\nLine\n{in_expected_text}\n\nbut you printed:\n\nLine\n{in_actual_text}\n")
+        f"I was expecting:\n\nLine\n{in_expected_text}\n\nbut you printed:\n\nLine\n{in_actual_text}\n"
+    )
 
 
 def header(label):
@@ -275,8 +289,11 @@ def check_io(mod, func, inputs, expected, label=None, match_func=check_match_exa
         print("✅ Passes" + (f" for {label}." if label is not None else ""))
         return True
     except CheckException as e:
-        for line in ("❌ There's a problem with your solution. " + (f"For {label}, " if label is not None else "") + str(
-                e)).split("\n"):
+        for line in (
+            "❌ There's a problem with your solution. "
+            + (f"For {label}, " if label is not None else "")
+            + str(e)
+        ).split("\n"):
             print(line)
         return False
 
@@ -284,6 +301,7 @@ def check_io(mod, func, inputs, expected, label=None, match_func=check_match_exa
 # =============================================================================
 # SECTION: Code Quality
 # =============================================================================
+
 
 def errors_and_warnings(files: list[str]) -> tuple[str, str]:
     all_errors = []
@@ -302,7 +320,6 @@ def errors_and_warnings(files: list[str]) -> tuple[str, str]:
 
 def pylint(file: str) -> tuple[list[str], list[str]]:
     if os.path.exists(linter):
-
         # pylint file, but have the output in json
         args = [linter, "--output-format=json", file]
 
@@ -310,16 +327,16 @@ def pylint(file: str) -> tuple[list[str], list[str]]:
         process = subprocess.Popen(args, stdout=subprocess.PIPE)
 
         # get the output from stdout
-        data = process.communicate()[0].decode('utf-8')
+        data = process.communicate()[0].decode("utf-8")
         infos: list[dict[str:str]] = json.loads(data)
 
         # search for output that matches the type of output you are looking for
         errors = []
         warnings = []
 
-        for info in (i for i in infos if i['type'] == "error"):
+        for info in (i for i in infos if i["type"] == "error"):
             errors.append(f"line: {info['line']}: {info['message']}")
-        for info in (i for i in infos if i['type'] == "warning"):
+        for info in (i for i in infos if i["type"] == "warning"):
             warnings.append(f"line: {info['line']}: {info['message']}")
         return warnings, errors
 
