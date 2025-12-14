@@ -8,10 +8,27 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "gradescope-utils>=0.5.0",
     "myst-parser>=4.0.1",
     "pytest>=9.0.1",
-    "ruff>=0.14.6",
     "sphinx>=8.2.3",
     "sphinx-autobuild>=2025.8.25",
     "sphinx-autodoc2>=0.5.0",
 ]
+
+[dependency-groups]
+coursework = [
+    "matplotlib>=3.10.7",
+    "numpy>=2.3.5",
+    "pyqt6>=6.10.0",
+]
+dev = [
+    "pre-commit>=4.5.0",
+]
+lint = [
+    "mdformat-myst>=0.2.2",
+    "ruff>=0.14.6",
+]
+
+[tool.uv]
+default-groups = "all"
