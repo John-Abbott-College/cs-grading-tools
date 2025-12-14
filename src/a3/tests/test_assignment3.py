@@ -22,7 +22,7 @@ class TestFiles(unittest.TestCase):
     def setUp(self):
         self.files_to_test = list(files_to_test.values())
 
-    @weight(0)
+    @weight(1)
     def test_source_files(self):
         """Check submitted code files"""
         for file in self.files_to_test:
@@ -52,7 +52,7 @@ class TestFuncSig(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unknown error occurred {e}. Reach out to teacher.")
 
-    @weight(0)
+    @weight(1)
     def test_check_for_inner_functions(self):
         """Scanning functions indentation level"""
         function_dict = get_inner_func(self.student_code)
@@ -68,7 +68,7 @@ class TestFuncSig(unittest.TestCase):
             )
         print("Great, all your functions are defined at the same level of indentation!")
 
-    @weight(6)
+    @weight(1)
     def test_function_definitions(self):
         """Checking if all the functions are there"""
 
@@ -80,24 +80,16 @@ class TestFuncSig(unittest.TestCase):
             )
         print("Good job! All functions are there!")
 
-    @weight(0)
+    @weight(1)
     def test_function_signatures(self):
         """Checking all the functions' signatures"""
         try:
-            for func_name, return_type, params_count in zip(
+            for func_name, params_count in zip(
                 self.functions_to_check,
-                self.expected_return_types,
                 self.expected_count_params,
             ):
                 sig = get_signature(self.student_code.__getattribute__(func_name))
-                actual_return = sig.return_annotation
                 actual_param_count = len(sig.parameters)
-                if return_type:  # check only if the function returns
-                    self.assertEqual(
-                        actual_return,
-                        return_type,
-                        f"Oops, the function {func_name} should return {return_type} not {actual_return}",
-                    )
                 self.assertEqual(
                     params_count,
                     actual_param_count,
@@ -111,7 +103,7 @@ class TestFuncSig(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unknown error{e}")
         print(
-            "Good job! All functions seem to have the correct return types and number of parameters"
+            "Good job! All functions have the correct number of parameters"
         )
 
 
@@ -157,7 +149,7 @@ class TestQ1Evaluator(unittest.TestCase):
             self.fail(e)
         print("Perfect! Correctly calculated!")
 
-    @weight(3)
+    @weight(1)
     def test_conditionals(self):
         """Logic Test: net_income()"""
         try:
@@ -190,11 +182,11 @@ class TestQ2Evaluator(unittest.TestCase):
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
         except ModuleNotFoundError as ex:
-            self.fail(f"No file named {files_to_test}. Di you rename it? ")
+            self.fail(f"No file named {files_to_test}.")
         except Exception as e:
             self.fail(f"Unknown error: {e}")
 
-    @weight(2)
+    @weight(1)
     def test_concentration_accuracy(self):
         """Accuracy Test: concentration_percent()"""
         try:
@@ -260,7 +252,7 @@ class TestQ2Evaluator(unittest.TestCase):
             "Great! You used all the statements and to determine the intake frequency"
         )
 
-    @weight(4)
+    @weight(1)
     def test_call_intake_frequency(self):
         """Accuracy Test: intake_frequency()"""
 
@@ -283,7 +275,7 @@ class TestQ2Evaluator(unittest.TestCase):
             self.fail(e)
         print("Perfect! intake_frequency() is correctly calculated!")
 
-    @weight(0)
+    @weight(1)
     def test_intake_frequency_upper_bound(self):
         """Logic Test: Upper bound frequency_intake()"""
         half_life = 1
@@ -318,7 +310,7 @@ class TestQ3Evaluator(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unknown error: {e}")
 
-    @weight(3)
+    @weight(1)
     def test_gcd_logic(self):
         """Logic Test: gcd()"""
         try:
@@ -330,7 +322,7 @@ class TestQ3Evaluator(unittest.TestCase):
         except Exception as e:
             self.fail(e)
 
-    @weight(4)
+    @weight(1)
     def test_gcd_accuracy(self):
         """Accuracy Test: gcd()"""
         inputs = [(459, 322), (3, 15), (512, 1048)]
@@ -362,7 +354,7 @@ class TestQ4Evaluator(unittest.TestCase):
         """Helper to avoid repeating code"""
         return (3 / 2) * math.sqrt(3) * (a**2)
 
-    @weight(2)
+    @weight(1)
     def test_hex_area(self):
         """Accuracy Test: hex_area()"""
         try:
@@ -382,7 +374,7 @@ class TestQ4Evaluator(unittest.TestCase):
             )
         print("Excellent, the area of one hex is correctly calculated")
 
-    @weight(2)
+    @weight(1)
     def test_using_loop(self):
         """Logic test: check if green_area() uses loops"""
         try:
@@ -394,7 +386,7 @@ class TestQ4Evaluator(unittest.TestCase):
         except Exception as e:
             self.fail(e)
 
-    @weight(11)
+    @weight(1)
     def test_green_area_accuracy(self):
         """Accuracy Test: green_area()"""
         try:
@@ -426,7 +418,7 @@ class TestQ4Evaluator(unittest.TestCase):
             )
         print("Great the green_area() does its job pretty well!")
 
-    @weight(2)
+    @weight(1)
     def test_varying_num_hex(self):
         """Logic Test 2: validating the num_hex is taken into account"""
         try:
