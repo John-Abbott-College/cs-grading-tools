@@ -1,10 +1,14 @@
 return {
 	{
-		"goerz/jupytext.nvim",
-
-		version = "0.2.0",
+		"stevearc/conform.nvim",
 		opts = {
-			-- format="md:myst",
-		}, -- see Options
+			formatters_by_ft = {
+				["python"] = { "ruff" },
+				["markdown"] = { "mdformat" },
+			},
+			default_format_opts = {
+				lsp_format = "fallback",
+			},
+		},
 	},
 }
