@@ -18,6 +18,12 @@ OUTPUT_COMMENTS: list[tuple[range, str]] = [
 
 @dataclass
 class Student:
+    """Student object
+    :param id:
+    :param name:
+    :param submission_date: datetime object
+    :days_late: float
+    """
     id: str
     name: str
     submission_date: datetime
@@ -55,8 +61,8 @@ def get_student_info_from_lea(folder_name: str,
 
 
 # ----------------------------------------------------------------------------------------
-def give_feedback(student: Student, evaluation: Grading, source_files: list[str] = None):
-    feedback_file = f"{student.id}_{student.name}"
+def give_feedback(student: Student, evaluation: Grading, source_files: list[str] = None, file_prefix: str = ""):
+    feedback_file = f"{file_prefix}{student.id}_{student.name}"
     feedback_file += ".md"
 
     with open(feedback_file, "w") as feedback_fh:
@@ -91,7 +97,7 @@ def print_evaluation(student: Student, evaluation: Grading, file: TextIO = sys.s
     file.write(formatter.result_header())
     for section in evaluation.sections:
         file.write(formatter.section_header(name=section.name, score=section.grade(), weight=section.weight))
-        for d in section.contents:
+        for d in section.deductions:
             file.write(formatter.deduction(feedback=d.feedback, weight=d.deduction))
 
     # print student code
@@ -139,7 +145,7 @@ class MarkDownFormat:
 
     @staticmethod
     def section_header(name: str, score: float, weight: float) -> str:
-        return f"* [`{score:6.2f}/{weight:3d}`] **{name} **\n"
+        return f"* [`{score:6.2f}/{weight:3.2f}`] **{name}**\n"
 
     @staticmethod
     def deduction(feedback: str, weight: float) -> str:

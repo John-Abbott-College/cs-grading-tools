@@ -37,15 +37,14 @@ class TestFuncSig(unittest.TestCase):
             self.student_code = __import__(py_file)
             self.functions_to_check = [
                 "net_income",
-                "actual_net_income",
                 "concentration_percent",
                 "intake_frequency",
                 "gcd",
                 "hex_area",
                 "green_area",
             ]
-            self.expected_return_types = [float, float, float, int, int, float, float]
-            self.expected_count_params = [2, 2, 2, 1, 2, 1, 3]
+            self.expected_return_types = [float, float, int, int, float, float]
+            self.expected_count_params = [2, 2, 1, 2, 1, 3]
         except ModuleNotFoundError as e:
             print(e)
             self.fail(f"Cannot find {files_to_test['func_file']}. Did you rename it?")
@@ -66,19 +65,20 @@ class TestFuncSig(unittest.TestCase):
                 f"Remember to define your functions at the same level of indentation to ensure they "
                 f"can be accessible to other python scripts",
             )
-        print("Great, all your functions are defined at the same level of indentation!")
+        print(
+            "Great, all your functions are defined at the correct level of indentation."
+        )
 
     @weight(1)
     def test_function_definitions(self):
         """Checking if all the functions are there"""
-
         for func_name in self.functions_to_check:
             self.assertTrue(
                 contains_func(self.student_code, func_name),
                 f"This function {func_name} was not found "
                 f"in {self.student_code.__name__}",
             )
-        print("Good job! All functions are there!")
+        print("Good job! All required functions are present.")
 
     @weight(1)
     def test_function_signatures(self):
@@ -95,24 +95,34 @@ class TestFuncSig(unittest.TestCase):
                     actual_param_count,
                     f"Oops, the function {func_name} should take {params_count} not {actual_param_count}",
                 )
-
         except ModuleNotFoundError as m:
             self.fail(f"Couldn't find {self.student_code.__name__}")
         except AttributeError as a:
             self.fail(f"You forgot to submit this function: {a}")
         except Exception as e:
             self.fail(f"Unknown error{e}")
-        print(
-            "Good job! All functions have the correct number of parameters"
-        )
+        print("Good job! All functions have the correct number of parameters")
 
 
 class TestQ1Evaluator(unittest.TestCase):
     def setUp(self):
         try:
             py_file, extension = splitext(files_to_test["func_file"])
-            self.income_brackets = [51_779, 103_544, 125_999, 150_000]
-            self.tax_rates = [0.14, 0.19, 0.24, 0.2575]
+            TAX_BRACKET_LOW = 53_255
+            TAX_BRACKET_MED = 106_495
+            TAX_BRACKET_HIGH = 129_590
+            INCOME_ABOVE_HIGHEST = 150_000
+            TAX_RATE_LOW = 0.14
+            TAX_RATE_MED = 0.19
+            TAX_RATE_HIGH = 0.24
+            TAX_RATE_ULTRA = 0.2575
+            self.income_brackets = [
+                TAX_BRACKET_LOW,
+                TAX_BRACKET_MED,
+                TAX_BRACKET_HIGH,
+                INCOME_ABOVE_HIGHEST,
+            ]
+            self.tax_rates = [TAX_RATE_LOW, TAX_RATE_MED, TAX_RATE_HIGH, TAX_RATE_ULTRA]
             self.weeks_per_year = 52
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
@@ -126,7 +136,7 @@ class TestQ1Evaluator(unittest.TestCase):
         """Accuracy Test: net_income()"""
         gross_income = (
             self.income_brackets[0] - 10
-        )  # insuring it's a value in the first bracket
+        )  # ensuring it's a value in the first bracket
         tax_rate = self.tax_rates[0]
         expected_net_income = gross_income * (1 - tax_rate)
         hours_per_week = 25
@@ -136,7 +146,6 @@ class TestQ1Evaluator(unittest.TestCase):
             actual_net_income = self.student_code.net_income(
                 hourly_rate=hourly_rate, hours_per_week=hours_per_week
             )
-
             self.assertAlmostEqual(
                 expected_net_income,
                 actual_net_income,
@@ -155,13 +164,11 @@ class TestQ1Evaluator(unittest.TestCase):
         try:
             weekly_hours = 40
             total_hours = weekly_hours * self.weeks_per_year
-
             for gross_income, tax_rate in zip(self.income_brackets, self.tax_rates):
-                expected_income = gross_income * (1 - tax_rate)
+                expected_income = (gross_income - 10) * (1 - tax_rate)
                 calculated_income = self.student_code.net_income(
                     hourly_rate=gross_income / total_hours, hours_per_week=weekly_hours
                 )
-
                 self.assertAlmostEqual(
                     expected_income,
                     calculated_income,
