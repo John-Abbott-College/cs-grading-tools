@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+set -oue pipefail
+shopt -s nullglob
+
+###################################
+### Script Usage and Parameters ###
+###################################
+
+help_message() {
+  echo "Usage: $0 [-h] SUBMISSION_DIRECTORY"
+  echo "Prepare student files for local gradescope emulation."
+  echo ""
+  echo "options:"
+  echo "-h     Print this help message."
+  echo
+}
+
+while getopts ":h" o; do case "${o}" in
+  h) help_message && exit ;;
+  \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
+  esac done
+
+shift $((OPTIND - 1))
+
+[[ -z $1 ]] && help_message && exit 1
+
+###################################
+### Functions ###
+###################################
+
+error() {
+  printf "%s\n" "$1" >&2
+  exit 1
+}
+
+clean_directory_names() {
+  local submissions_dir="${1}"
+  find "${submissions_dir}" -maxdepth 1 -name "* *" -type f
+  for f in "${submissions_dir}/"*\ *; do
+    mv -v "$f" "${f// /-}"
+  done
+}
+
+clean_unnecessary_directories() {
+  local submissions_dir="${1}"
+
+  echo "finding and removing .idea"
+  find $submissions_dir -type d -name '.idea' -exec rm -r {} \;
+
+  echo "finding and removing venv"
+  find $submissions_dir -type d -name 'venv' -exec rm -rf {} \;
+
+  echo "finding and removing .venv"
+  find $submissions_dir -type d -name '.venv' -exec rm -rf {} \;
+
+  echo "finding and removing __MACOSX"
+  find $submissions_dir -type d -name '__MACOSX' -exec rm -rf {} \;
+
+  echo "finding and removing __pycache__"
+  find $submissions_dir -type d -name '__pycache__' -exec rm -rf {} \;
+}
+
+###################################
+### Script ###
+###################################
+
+submissions_dir=$1
+[[ ! -d "${submissions_dir}" ]] && error "${submissions_dir1} does not exist, try another directory."
+
+clean_directory_names "${submissions_dir}" && echo "Finished checking directory names."
+clean_unnecessary_directories "${submissions_dir}" && echo "Finished clearing unnecessary directories."

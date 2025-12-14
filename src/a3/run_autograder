@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# Remove unecessary folders and temporary folders
-echo "finding and removing .idea"
-find . -type d -name '.idea' -exec rm -r {} \;
-
-echo "finding and removing venv"
-find . -type d -name 'venv' -exec rm -rf {} \;
-
-echo "finding and removing .venv"
-find . -type d -name '.venv' -exec rm -rf {} \;
-
-echo "finding and removing __MACOSX"
-find . -type d -name '__MACOSX' -exec rm -rf {} \;
-
-echo "finding and removing __pycache__"
-find . -type d -name '__pycache__' -exec rm -rf {} \;
-
-
 # Copies recursively the student files into the autograder folder 
 echo "Moving the student files into the source folder"
 find . -name '*.py' -exec cp {} /autograder/source/ \; 

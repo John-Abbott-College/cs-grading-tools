@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -oue pipefail
+shopt -s nullglob
+
+SCRIPT_PATH="run_tests.py"
+GRADING_DIR="submissions"
+
+###################################
+### Script Usage and Parameters ###
+###################################
+
+help_message() {
+    echo "Usage: $0 [-h] STUDENT_DIRECTORY"
+    echo "Runner for local gradescope emulation."
+    echo ""
+    echo "options:"
+    echo "-h     Print this help message."
+    echo
+}
+
+while getopts ":h" o; do case "${o}" in
+    h) help_message && exit ;;
+    \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
+esac done
+
+shift $((OPTIND - 1));
+
+[[ -z $1 ]] && help_message && exit 1;
+
+
+###################################
+### Functions ###
+###################################
+
+error() { printf "%s\n" "$1" >&2; exit 1; }
+
+###################################
+### Script ###
+###################################
+
+cur=$PWD
+args=("$@")
+
+function dir_command {
+  local student_dir="${1}"
+  read -p "Grade ${student_dir}? y/n: " grade_this_dir
+  if [[ ${grade_this_dir} == "y" ]]; then
+    mapfile -t -d '' student_files < <(find ${student_dir} -name '*.py' -print0)
+    for file in "${student_files[@]}"; do cp -v "${file}" .; done
+    python "${SCRIPT_PATH}" ${student_dir}
+    for file in "${student_files[@]}"; do rm -v "$(basename {file})"; done
+  else
+    echo "Skipping to next dir."
+  fi
+}
+
+mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+for D in "${dirs[@]}"; do dir_command "${D}"; done
