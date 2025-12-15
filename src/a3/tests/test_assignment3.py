@@ -95,10 +95,10 @@ class TestFuncSig(unittest.TestCase):
                     actual_param_count,
                     f"Oops, the function {func_name} should take {params_count} not {actual_param_count}",
                 )
-        except ModuleNotFoundError as m:
+        except ModuleNotFoundError:
             self.fail(f"Couldn't find {self.student_code.__name__}")
         except AttributeError as a:
-            self.fail(f"You forgot to submit this function: {a}")
+            self.fail(f"You forgot to submit this function {a}")
         except Exception as e:
             self.fail(f"Unknown error{e}")
         print("Good job! All functions have the correct number of parameters")
@@ -126,14 +126,14 @@ class TestQ1Evaluator(unittest.TestCase):
             self.weeks_per_year = 52
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
-        except ModuleNotFoundError as ex:
+        except ModuleNotFoundError:
             self.fail(f"No file named {self.file_to_test}. Di you rename it? ")
         except Exception as e:
-            self.fail(f"Unknown error: {e}")
+            self.fail(f"Unknown error {e}")
 
     @weight(1)
     def test_accuracy(self):
-        """Accuracy Test: net_income()"""
+        """Accuracy Test net_income()"""
         gross_income = (
             self.income_brackets[0] - 10
         )  # ensuring it's a value in the first bracket
@@ -160,7 +160,7 @@ class TestQ1Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_conditionals(self):
-        """Logic Test: net_income()"""
+        """Logic Test net_income()"""
         try:
             weekly_hours = 40
             total_hours = weekly_hours * self.weeks_per_year
@@ -173,8 +173,7 @@ class TestQ1Evaluator(unittest.TestCase):
                     expected_income,
                     calculated_income,
                     places=6,
-                    msg=f"""For a gross salary of {gross_income:.2f}$, I expect a net salary of {expected_income:.2f}$, 
-                        but got {calculated_income:.2f}$""",
+                    msg=f"For a gross salary of {gross_income:.2f}$, I expect a net salary of {expected_income:.2f}$, but got {calculated_income:.2f}$",
                 )
 
         except Exception as e:
@@ -188,14 +187,14 @@ class TestQ2Evaluator(unittest.TestCase):
             py_file, extension = splitext(files_to_test["func_file"])
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
-        except ModuleNotFoundError as ex:
+        except ModuleNotFoundError:
             self.fail(f"No file named {files_to_test}.")
         except Exception as e:
-            self.fail(f"Unknown error: {e}")
+            self.fail(f"Unknown error {e}")
 
     @weight(1)
     def test_concentration_accuracy(self):
-        """Accuracy Test: concentration_percent()"""
+        """Accuracy Test concentration_percent()"""
         try:
             expected = 1  # or 100%
             value = self.student_code.concentration_percent(half_life=5, time=0)
@@ -203,7 +202,7 @@ class TestQ2Evaluator(unittest.TestCase):
             is_equal = math.isclose(expected, value, abs_tol=tol) or math.isclose(
                 100 * expected, value, abs_tol=tol
             )
-            self.assertTrue(is_equal, f"concentration not calculated accurately")
+            self.assertTrue(is_equal, "concentration not calculated accurately")
         except AttributeError as attribute_err:
             print(attribute_err)
             self.fail(
@@ -212,12 +211,12 @@ class TestQ2Evaluator(unittest.TestCase):
         except TypeError as type_err:
             print(type_err)
             self.fail(
-                f"It seems like the function concentration_percent isn't defined with the right number of input parameters"
+                "It seems like the function concentration_percent isn't defined with the right number of input parameters"
             )
 
         self.assertIsNotNone(
             value,
-            f"It seems like the function concentration_percent() isn't returning a value",
+            "It seems like the function concentration_percent() isn't returning a value",
         )
         self.assertIsInstance(
             value,
@@ -230,19 +229,19 @@ class TestQ2Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_logic(self):
-        """Logic test: intake_frequency()"""
+        """Logic test intake_frequency()"""
         try:
             helper_func_name = self.student_code.concentration_percent.__name__
             function_to_test = self.student_code.intake_frequency
             self.assertTrue(
                 uses_condition(function_to_test),
-                f"Oops, it seems like the active substance intake frequency is missing an important "
-                f"part of the algorithm: the if statement!",
+                "Oops, it seems like the active substance intake frequency is missing an important "
+                "part of the algorithm the if statement!",
             )
             self.assertTrue(
                 uses_loop(function_to_test),
-                f"Oops, it seems like the active substance intake frequency is missing an important "
-                f"part of the algorithm: the loop!",
+                "Oops, it seems like the active substance intake frequency is missing an important "
+                "part of the algorithm the loop!",
             )
             func_calls = get_func_calls(function_to_test)
             is_calling_helper = helper_func_name in func_calls
@@ -261,7 +260,7 @@ class TestQ2Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_call_intake_frequency(self):
-        """Accuracy Test: intake_frequency()"""
+        """Accuracy Test intake_frequency()"""
 
         half_life = 5.5  # caffeine
         expected = math.log(20) * half_life / math.log(2)
@@ -272,7 +271,7 @@ class TestQ2Evaluator(unittest.TestCase):
                 first=actual,
                 second=expected,
                 msg=f"Tested intake_frequency() with the caffeine's {half_life=} in hours. "
-                f"Got: {actual} but expected {round(expected)}",
+                f"Got {actual} but expected {round(expected)}",
                 delta=1,
             )
 
@@ -284,7 +283,7 @@ class TestQ2Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_intake_frequency_upper_bound(self):
-        """Logic Test: Upper bound frequency_intake()"""
+        """Logic Test Upper bound frequency_intake()"""
         half_life = 1
         expected = math.ceil(math.log(20) * half_life / math.log(2))
 
@@ -294,7 +293,7 @@ class TestQ2Evaluator(unittest.TestCase):
                 first=actual,
                 second=expected,
                 msg=f"Tested intake_frequency() with the caffeine's {half_life=} in hours."
-                f" Got: {actual} but expected {round(expected)}",
+                f" Got {actual} but expected {round(expected)}",
                 delta=1,
             )
         except AttributeError as a:
@@ -312,26 +311,26 @@ class TestQ3Evaluator(unittest.TestCase):
             py_file, extension = splitext(files_to_test["func_file"])
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
-        except ModuleNotFoundError as ex:
+        except ModuleNotFoundError:
             self.fail(f"No file named {files_to_test}. Di you rename it? ")
         except Exception as e:
-            self.fail(f"Unknown error: {e}")
+            self.fail(f"Unknown error {e}")
 
     @weight(1)
     def test_gcd_logic(self):
-        """Logic Test: gcd()"""
+        """Logic Test gcd()"""
         try:
             function = self.student_code.gcd
-            self.assertTrue(uses_loop(function), f"gcd() isn't using a loop")
+            self.assertTrue(uses_loop(function), "gcd() isn't using a loop")
             self.assertTrue(
-                uses_condition(function), f"gcd() isn't using a conditional statement"
+                uses_condition(function), "gcd() isn't using a conditional statement"
             )
         except Exception as e:
             self.fail(e)
 
     @weight(1)
     def test_gcd_accuracy(self):
-        """Accuracy Test: gcd()"""
+        """Accuracy Test gcd()"""
         inputs = [(459, 322), (3, 15), (512, 1048)]
         expected_output = [1, 3, 8]
         try:
@@ -340,7 +339,7 @@ class TestQ3Evaluator(unittest.TestCase):
                 self.assertEqual(
                     expected,
                     actual,
-                    f"Incorrect gcd for {pair}. Expected: {expected} Got: {actual}",
+                    f"Incorrect gcd for {pair}. Expected {expected} Got {actual}",
                 )
         except Exception as e:
             self.fail(e)
@@ -352,10 +351,10 @@ class TestQ4Evaluator(unittest.TestCase):
             py_file, extension = splitext(files_to_test["func_file"])
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
-        except ModuleNotFoundError as ex:
+        except ModuleNotFoundError:
             self.fail(f"No file named {files_to_test}. Di you rename it? ")
         except Exception as e:
-            self.fail(f"Unknown error: {e}")
+            self.fail(f"Unknown error {e}")
 
     def hex_area(self, a):
         """Helper to avoid repeating code"""
@@ -363,7 +362,7 @@ class TestQ4Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_hex_area(self):
-        """Accuracy Test: hex_area()"""
+        """Accuracy Test hex_area()"""
         try:
             a = 1
             expected_area = self.hex_area(a)
@@ -383,19 +382,19 @@ class TestQ4Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_using_loop(self):
-        """Logic test: check if green_area() uses loops"""
+        """Logic test check if green_area() uses loops"""
         try:
             function = self.student_code.green_area
             self.assertTrue(
                 uses_loop(function),
-                f"The green area cannot be obtained without using a loop",
+                "The green area cannot be obtained without using a loop",
             )
         except Exception as e:
             self.fail(e)
 
     @weight(1)
     def test_green_area_accuracy(self):
-        """Accuracy Test: green_area()"""
+        """Accuracy Test green_area()"""
         try:
             a0 = 2
             w = 3
@@ -427,7 +426,7 @@ class TestQ4Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_varying_num_hex(self):
-        """Logic Test 2: validating the num_hex is taken into account"""
+        """Logic Test 2 validating the num_hex is taken into account"""
         try:
             a0 = 2
             w = 3

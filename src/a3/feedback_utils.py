@@ -122,6 +122,7 @@ def print_evaluation(
             file.write(formatter.deduction(feedback=d.feedback, weight=d.deduction))
 
     # print student code
+    file.write("\n")
     file.write(formatter.code_header())
     for code_file in source_files:
         if os.path.exists(code_file) and os.path.isfile(code_file):
@@ -174,7 +175,7 @@ class MarkDownFormat:
 
     @staticmethod
     def result_header() -> str:
-        return "### Results:\n"
+        return "### Results:\n\n"
 
     @staticmethod
     def code_header() -> str:
@@ -184,7 +185,9 @@ class MarkDownFormat:
     def code_file(filename: str, code: str) -> str:
         return f"""
 ### {filename}
+
 ```python
 {code}
 ```
+
 """

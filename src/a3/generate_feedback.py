@@ -1,12 +1,11 @@
-import math
 from datetime import datetime
 
-from grading import Grading, Section
+from grading import Grading
 from feedback_utils import get_student_info_from_lea, give_feedback, Student
-from check_util import run_top_level_code_return_output, errors_and_warnings
+from check_util import errors_and_warnings
 import os
-import re
 import sys
+import json
 
 files = ["my_functions.py", "assignment3.py"]
 
@@ -18,28 +17,31 @@ manual_test_results = dict()
 grading = Grading()
 
 
-def run_manual_tests():
-    section_coding_quality = grading.add_section("Coding Quality", 0, -1)
-    section_edits_required = grading.add_section("Edits required", -1)
-
-    # Coding quality
-    all_errors, all_warnings = errors_and_warnings(files)
-    section_coding_quality.add_result(f"Warnings:\n{all_warnings}", 0)
-    section_coding_quality.ask_question_with_feedback("Are the variables good?", 1)
-    section_coding_quality.ask_question(
-        "Did you use variable names instead of numbers?",
-        "Use the variables given, not the actual numbers (using numbers makes it harder to read what your code is doing, "
-        "and is more prone to mistakes)",
-        1,
-    )
-    section_coding_quality.ask_question_with_feedback("No dead (unused) code?", 1)
+def run_manual_tests(autograding_answers):
+    section_edits_required = grading.add_section("Submission issues", 1)
+    section_coding_quality = grading.add_section("Code quality", 1)
+    section_well_tested = grading.add_section("assignment3.py file used correctly", 1)
+    section_functionality = grading.add_section("Required functionality", 16)
 
     # Edits required
-    section_edits_required.ask_question_with_feedback(
-        "Were major edits required to get the code to work properly?"
-        "Major edits were required to get the code to work properly.",
-        1,
-    )
+    section_edits_required.ask_question_with_partial_grade("no major edits required to get the code to work properly", 1)
+
+    # Coding quality
+    section_coding_quality.ask_question_with_partial_grade("variables used appropriately", 1)
+
+    # assignment3.py
+    section_well_tested.ask_question_with_partial_grade("assignment3.py used to test the my_functions.py functions", 1)
+
+    # Parse autograder for required functionality
+    with open(autograding_answers, mode="r") as f:
+        autograder_results = json.load(f)
+
+    for test in autograder_results["tests"]:
+        section_functionality.add_result_with_partial_grade(
+            test["name"], test["score"], test["max_score"], test.get("output", "")
+        )
+
+
 
 
 # ===============================================================================
@@ -58,15 +60,17 @@ if __name__ == "__main__":
     dirs = pathname.split(os.sep)
 
     manual_grading_answers = f"{path}test_answers.txt"
+    autograding_answers = f"{path}results.json"
+
     if not os.path.exists(manual_grading_answers):
-        run_manual_tests()
+        run_manual_tests(autograding_answers)
         with open(manual_grading_answers, "w", encoding="utf-8") as fh:
             print(str(grading), file=fh)
 
     else:
         ans = input("Do you want to re-answer questions? ")
         if "y" in ans:
-            run_manual_tests()
+            run_manual_tests(autograding_answers)
             with open(manual_grading_answers, "w", encoding="utf-8") as fh:
                 print(str(grading), file=fh)
 

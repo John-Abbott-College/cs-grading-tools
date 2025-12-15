@@ -96,10 +96,25 @@ class Section:
             self.deductions.append(Deductions(grade, question + ": " + response))
         return ans
 
+    def ask_question_with_partial_grade(self, question, grade: float):
+        result, response = self._determine_partial_grade(question=question, grade=grade)
+        deduction = abs(result - grade)
+        self.deductions.append(Deductions(deduction, response))
+
+
     def add_result(self, response, grade: float):
         response = response.replace("\n", "<br>")
         self.deductions.append(Deductions(grade, response))
         print(response)
+
+    def add_result_with_partial_grade(self, question, score, max_score, output):
+        if score != max_score:
+            result, response = self._determine_partial_grade(question.replace(":",""), max_score)
+        else:
+            result, response = score, f"{question.replace(":","")}: "
+        response += output.replace(":", "")
+        deduction = abs(result - max_score)
+        self.deductions.append(Deductions(deduction, response))
 
     def grade(self) -> float:
         total = 0
@@ -119,6 +134,27 @@ class Section:
             + "\n"
             + "\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
         )
+
+    def _determine_partial_grade(self, question, grade) -> tuple(float, str):
+        ans = -1
+        while ans < 0 or ans > 5:
+            ans = input(f"{question} Assign grade on 5 point scale (5 is perfect, 0 is not at all, etc) ")
+            try:
+                ans = int(ans)
+            except ValueError:
+                pass
+        additional_feedback = input(f"any additional feedback? Leave empty (hit enter) if no ")
+        response_dict = {
+            0: "not done",
+            1: "attempted but significant issues",
+            2: "attempted with major issues",
+            3: "reasonable attempt with some issues",
+            4: "good, with 1 or more small mistakes",
+            5: "perfect"
+        }
+        result = (ans / 5) * grade
+        response = f"{question}: {response_dict[ans]} ({result}/{grade}). {additional_feedback}"
+        return result, response
 
 
 @dataclass
