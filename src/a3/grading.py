@@ -153,7 +153,7 @@ class Section:
             5: "perfect"
         }
         result = (ans / 5) * grade
-        response = f"{question}: {response_dict[ans]} ({result}/{grade}). {additional_feedback}"
+        response = f"{question}: {response_dict[ans]}. {additional_feedback}"
         return result, response
 
 

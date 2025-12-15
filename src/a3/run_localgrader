@@ -4,6 +4,7 @@ shopt -s nullglob
 
 verbose=false
 interactive=false
+feedback=false
 
 ###################################
 ### Script Usage and Parameters ###
@@ -17,21 +18,24 @@ help_message() {
     echo "-h                    Print this help message."
     echo "-v                    Verbose."
     echo "-i                    Interactive."
+    echo "-f                    Feedback."
     echo "GRADING_DIRECTORY     Use instead of default."
     echo
 }
 
-while getopts ":h:v:i" o; do case "${o}" in
+while getopts ":h:v:i:f" o; do case "${o}" in
     h) help_message && exit ;;
     v) verbose=true ;;
     i) interactive=true ;;
+    f) feedback=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
 shift $((OPTIND - 1));
 
 AUTOGRADE_SCRIPT="run_tests.py"
-MANUALGRADE_SCRIPT="generate_feedback.py"
+MANUALGRADE_SCRIPT="run_manualgrader.py"
+FEEDBACK_SCRIPT="run_feedback_generator.py"
 GRADING_DIR="${1:-submissions}"
 
 ###################################
@@ -60,8 +64,8 @@ function clean_student_files {
 
 function autograde {
   local student_dir="${1}"
-  python ${AUTOGRADE_SCRIPT} ${student_dir}
   echo -n "autograding ${student_dir}..."
+  python ${AUTOGRADE_SCRIPT} ${student_dir}
   grep score "${student_dir}/results.json" | tail -n 1 | column -t
 }
 
@@ -73,16 +77,21 @@ function manualgrade {
 function interactivegrade {
   local student_dir="${1}"
   autograde $student_dir
-  read -p "Manual grade ${student_dir}? y/n: " grade_this_dir
-  while [[ ${grade_this_dir} == "y" ]]; do
-    manualgrade $student_dir
-    echo "NOTE: you can alter the student submission at this point, it will be re-copied."
+  manualgrade $student_dir
+  read -p "Rerun and reapply autogrades? y/n" grade_this_dir
+  if [[ ${grade_this_dir} == "y" ]]; then
     clean_student_files
     get_student_files $student_dir
     autograde $student_dir
-    read -p "regrade ${student_dir}? y/n: " grade_this_dir
-  done
+    manualgrade $student_dir
+  fi
   echo "On to the next student."
+}
+
+function generate_feedback {
+  local student_dir="${1}"
+  echo "generating feedback for ${student_dir}..."
+  python ${FEEDBACK_SCRIPT} ${student_dir}
 }
 
 function grade_student_dir {
@@ -90,6 +99,8 @@ function grade_student_dir {
   get_student_files $student_dir
   if ${interactive}; then
     interactivegrade $student_dir
+  elif ${feedback}; then
+    generate_feedback $student_dir
   else
     autograde $student_dir
   fi
