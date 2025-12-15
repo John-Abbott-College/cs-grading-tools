@@ -37,6 +37,7 @@ AUTOGRADE_SCRIPT="run_tests.py"
 MANUALGRADE_SCRIPT="run_manualgrader.py"
 FEEDBACK_SCRIPT="run_feedback_generator.py"
 GRADING_DIR="${1:-submissions}"
+PDF_CSS="pdf.css"
 
 ###################################
 ### Script ###
@@ -86,6 +87,11 @@ function generate_feedback {
   local student_dir="${1}"
   echo "generating feedback for ${student_dir}..."
   python ${FEEDBACK_SCRIPT} ${student_dir} 0 || error "Error caught: cleaning student files and exiting."
+  local feedback_file=$(find ${student_dir} -type f -name "*.md")
+  # mdformat ${feedback_file}
+  PANDOC_OPTS=( --standalone --highlight-style=kate --from=commonmark_x --to=html5 )
+  WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" )
+  pandoc "${PANDOC_OPTS[@]}" "${feedback_file}" | weasyprint "${WEASYPRINT_OPTS[@]}" - - > "${feedback_file%.*}.pdf"
 }
 
 function generate_rubric {

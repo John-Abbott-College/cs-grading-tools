@@ -103,7 +103,7 @@ def print_evaluation(
     file.write(formatter.header())
     file.write(
         formatter.title(
-            title=evaluation.title, score=final_grade, weight=evaluation.out_of()
+            title=evaluation.title, score=final_grade, max_grade=evaluation.out_of()
         )
     )
     file.write(
@@ -115,11 +115,11 @@ def print_evaluation(
     for section in evaluation.sections:
         file.write(
             formatter.section_header(
-                name=section.name, score=section.grade(), weight=section.weight
+                name=section.name, score=section.grade()*section.weight, max_grade=section.max_grade*section.weight
             )
         )
         for d in section.deductions:
-            file.write(formatter.deduction(feedback=d.feedback, weight=d.deduction))
+            file.write(formatter.deduction(feedback=d.feedback, deduction=d.deduction*section.weight))
 
     # print student code
     file.write("\n")
@@ -142,8 +142,8 @@ class MarkDownFormat:
         return ""
 
     @staticmethod
-    def title(title: str, score: float, weight: int) -> str:
-        return f"# {title} [{score}/{weight}]\n"
+    def title(title: str, score: float, max_grade: int) -> str:
+        return f"# {title} [{score}/{max_grade}]\n"
 
     @staticmethod
     def student_info(student: Student, evaluation: Grading, comment: str) -> str:
@@ -166,12 +166,12 @@ class MarkDownFormat:
 """
 
     @staticmethod
-    def section_header(name: str, score: float, weight: float) -> str:
-        return f"* [`{score:6.2f}/{weight:3.2f}`] **{name}**\n"
+    def section_header(name: str, score: float, max_grade: float) -> str:
+        return f"* [`{score:6.2f}/{max_grade:3.2f}`] **{name}**\n"
 
     @staticmethod
-    def deduction(feedback: str, weight: float) -> str:
-        return f"  * `[-{weight:5.2f}]`  {feedback}  \n"
+    def deduction(feedback: str, deduction: float) -> str:
+        return f"  * `[-{deduction:5.2f}]`  {feedback}  \n"
 
     @staticmethod
     def result_header() -> str:

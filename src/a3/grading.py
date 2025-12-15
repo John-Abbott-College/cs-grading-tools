@@ -1,6 +1,5 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Generator
 
 
 class Grading:
@@ -23,10 +22,8 @@ class Grading:
         return self._sections.values()
 
     def grade(self) -> float:
-        out_of = 0
         total = 0
         for section in self.sections:
-            out_of += section.max_grade * section.weight
             total += section.grade() * section.weight
         return total
 
@@ -142,7 +139,7 @@ class Section:
                 ans = int(ans)
             except ValueError:
                 pass
-        additional_feedback = input(f"any additional feedback? Leave empty (hit enter) if no ")
+        additional_feedback = input("any additional feedback? Leave empty (hit enter) if no ")
         response_dict = {
             0: "not done",
             1: "attempted but significant issues",
