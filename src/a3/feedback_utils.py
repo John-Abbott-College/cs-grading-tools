@@ -70,17 +70,23 @@ def give_feedback(
     source_files: list[str] = None,
     file_prefix: str = "",
 ):
-    feedback_file = f"{file_prefix}{student.id}_{student.name}"
-    feedback_file += ".md"
+    student_prefix = f"{file_prefix}{student.id}_{student.name}"
+    feedback_file = f"{student_prefix}.md"
+    grading_csv = f"{student_prefix}.csv"
 
-    with open(feedback_file, "w") as feedback_fh:
-        print_evaluation(student, evaluation, feedback_fh, source_files)
+    with open(feedback_file, "w") as fh:
+        print_evaluation(student, evaluation, fh, source_files)
+
+    with open(grading_csv, "w") as fh:
+        print_grades(student, evaluation, fh)
 
 
 # =============================================================================
 # print
 # =============================================================================
 
+def print_grades(student: Student, evaluation: Grading, file: TextIO = sys.stdout):
+    file.write(f"{student.name},{student.id},{evaluation.grade()},See LEA for feedback.")
 
 def print_evaluation(
     student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
