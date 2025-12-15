@@ -2,16 +2,6 @@
 set -oue pipefail
 shopt -s nullglob
 
-interactive=false
-feedback=false
-rubric=false
-
-AUTOGRADE_SCRIPT="run_tests.py"
-MANUALGRADE_SCRIPT="run_manualgrader.py"
-FEEDBACK_SCRIPT="run_feedback_generator.py"
-GRADING_DIR="${1:-submissions}"
-PDF_CSS="pdf.css"
-
 ###################################
 ### Script Usage and Parameters ###
 ###################################
@@ -29,11 +19,17 @@ help_message() {
     echo
 }
 
-while getopts ":hifr" o; do case "${o}" in
+interactive=false
+feedback=false
+rubric=false
+skip=false
+
+while getopts ":hifrs" o; do case "${o}" in
     h) help_message && exit 0 ;;
     i) interactive=true ;;
     f) feedback=true ;;
     r) rubric=true ;;
+    s) skip=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
@@ -42,6 +38,15 @@ shift $((OPTIND - 1));
 ###################################
 ### Script ###
 ###################################
+
+AUTOGRADE_SCRIPT="run_tests.py"
+MANUALGRADE_SCRIPT="run_manualgrader.py"
+FEEDBACK_SCRIPT="run_feedback_generator.py"
+GRADING_DIR="${1:-submissions}"
+
+PDF_CSS="pdf.css"
+SOLUTION_FOLDER="AAASOLUTIONZZZ"
+TEST_ANSWER_FILE="test_answers.txt"
 
 cur=$PWD
 args=("$@")
@@ -73,7 +78,7 @@ function interactivegrade {
   local student_dir="${1}"
   autograde $student_dir
   manualgrade $student_dir
-  read -p "Rerun and reapply autogrades? y/n" grade_this_dir
+  read -p "Rerun and reapply autogrades? y/n: " grade_this_dir
   if [[ ${grade_this_dir} == "y" ]]; then
     clean_student_files
     get_student_files $student_dir
@@ -88,7 +93,7 @@ function generate_feedback {
   echo "generating feedback for ${student_dir}..."
   python ${FEEDBACK_SCRIPT} ${student_dir} 0 || error "Error caught: cleaning student files and exiting."
   local feedback_file=$(find ${student_dir} -type f -name "*.md")
-  # mdformat ${feedback_file}
+  mdformat ${feedback_file}
   PANDOC_OPTS=( --standalone --highlight-style=kate --from=commonmark_x --to=html5 )
   WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" )
   pandoc "${PANDOC_OPTS[@]}" "${feedback_file}" | weasyprint "${WEASYPRINT_OPTS[@]}" - - > "${feedback_file%.*}.pdf"
@@ -116,7 +121,6 @@ function grade_student_dir {
   clean_student_files
 }
 
-
 function error() {
   printf "%s\n" "$1" >&2
   clean_student_files
@@ -132,10 +136,16 @@ function ctrl_c() {
 }
 
 if ${rubric}; then
-  student_dir=$(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -name "*AAASOLUTIONZZZ*")
+  student_dir=$(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -name "*${SOLUTION_FOLDER}*")
   grade_student_dir "${student_dir}/"
 else
   mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+  if ${skip}; then
+    mapfile -t -d '' skippable_dirs < <(find ${GRADING_DIR} -type f -name "${TEST_ANSWER_FILE}" -exec dirname {} \; | sort)
+    echo "Skipping the following directories (already graded):"
+    printf '%s\n' "${dirs[@]}"
+    dirs=($(comm --nocheck-order -3 <(printf "%s\n" "${dirs[@]}") <(printf "%s\n" "${skippable_dirs[@]}")))
+  fi
   for D in "${dirs[@]}"; do grade_student_dir "${D}/"; done
 fi
 
