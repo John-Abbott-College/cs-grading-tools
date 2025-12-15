@@ -4,6 +4,7 @@ shopt -s nullglob
 
 interactive=false
 feedback=false
+rubric=false
 
 ###################################
 ### Script Usage and Parameters ###
@@ -15,16 +16,18 @@ help_message() {
     echo ""
     echo "options:"
     echo "-h                    Print this help message."
+    echo "-r                    Generate rubric (before running all tests)."
     echo "-i                    Interactive (manual and autotests)."
     echo "-f                    Generate feedback (after running all tests)."
     echo "GRADING_DIRECTORY     Use instead of default."
     echo
 }
 
-while getopts ":hif" o; do case "${o}" in
+while getopts ":hifr" o; do case "${o}" in
     h) help_message && exit 0 ;;
     i) interactive=true ;;
     f) feedback=true ;;
+    r) rubric=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
@@ -34,12 +37,6 @@ AUTOGRADE_SCRIPT="run_tests.py"
 MANUALGRADE_SCRIPT="run_manualgrader.py"
 FEEDBACK_SCRIPT="run_feedback_generator.py"
 GRADING_DIR="${1:-submissions}"
-
-###################################
-### Functions ###
-###################################
-
-error() { printf "%s\n" "$1" >&2; exit 1; }
 
 ###################################
 ### Script ###
@@ -62,13 +59,13 @@ function clean_student_files {
 function autograde {
   local student_dir="${1}"
   echo -n "autograding ${student_dir}..."
-  python ${AUTOGRADE_SCRIPT} ${student_dir}
+  python ${AUTOGRADE_SCRIPT} ${student_dir} || error "Error caught: cleaning student files and exiting."
   grep score "${student_dir}/results.json" | tail -n 1 | column -t
 }
 
 function manualgrade {
   local student_dir="${1}"
-  python ${MANUALGRADE_SCRIPT} ${student_dir}
+  python ${MANUALGRADE_SCRIPT} ${student_dir} || error "Error caught: cleaning student files and exiting."
 }
 
 function interactivegrade {
@@ -88,7 +85,14 @@ function interactivegrade {
 function generate_feedback {
   local student_dir="${1}"
   echo "generating feedback for ${student_dir}..."
-  python ${FEEDBACK_SCRIPT} ${student_dir}
+  python ${FEEDBACK_SCRIPT} ${student_dir} 0 || error "Error caught: cleaning student files and exiting."
+}
+
+function generate_rubric {
+  local student_dir="${1}"
+  autograde $student_dir
+  manualgrade $student_dir
+  python ${FEEDBACK_SCRIPT} ${student_dir} 1 || error "Error caught: cleaning student files and exiting."
 }
 
 function grade_student_dir {
@@ -96,12 +100,21 @@ function grade_student_dir {
   get_student_files $student_dir
   if ${interactive}; then
     interactivegrade $student_dir
+  elif ${rubric}; then
+    generate_rubric $student_dir
   elif ${feedback}; then
     generate_feedback $student_dir
   else
     autograde $student_dir
   fi
   clean_student_files
+}
+
+
+function error() {
+  printf "%s\n" "$1" >&2
+  clean_student_files
+  exit 1
 }
 
 trap ctrl_c INT
@@ -112,5 +125,11 @@ function ctrl_c() {
   exit 0
 }
 
-mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
-for D in "${dirs[@]}"; do grade_student_dir "${D}/"; done
+if ${rubric}; then
+  student_dir=$(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -name "*AAASOLUTIONZZZ*")
+  grade_student_dir "${student_dir}/"
+else
+  mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+  for D in "${dirs[@]}"; do grade_student_dir "${D}/"; done
+fi
+

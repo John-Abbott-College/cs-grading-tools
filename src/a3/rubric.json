@@ -1,0 +1,21 @@
+{
+  "Submission issues": 3,
+  "Code quality": 3,
+  "assignment3.py file used correctly": 3,
+  "Check submitted code files": 3,
+  "Scanning functions indentation level": 3,
+  "Checking if all the functions are there": 3,
+  "Checking all the functions' signatures": 3,
+  "Accuracy Test net_income()": 3,
+  "Logic Test net_income()": 3,
+  "Accuracy Test intake_frequency()": 3,
+  "Accuracy Test concentration_percent()": 3,
+  "Logic Test Upper bound frequency_intake()": 3,
+  "Logic test intake_frequency()": 3,
+  "Accuracy Test gcd()": 3,
+  "Logic Test gcd()": 3,
+  "Accuracy Test green_area()": 3,
+  "Accuracy Test hex_area()": 3,
+  "Logic test check if green_area() uses loops": 3,
+  "Logic Test 2 validating the num_hex is taken into account": 3
+}
