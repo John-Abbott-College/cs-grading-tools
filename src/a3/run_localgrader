@@ -2,7 +2,6 @@
 set -oue pipefail
 shopt -s nullglob
 
-verbose=false
 interactive=false
 feedback=false
 
@@ -12,20 +11,18 @@ feedback=false
 
 help_message() {
     echo "Usage: $0 [-h] [GRADING_DIRECTORY]"
-    echo "Runner for local gradescope emulation."
+    echo "Runner for local gradescope emulation. Runs autograding tests by default."
     echo ""
     echo "options:"
     echo "-h                    Print this help message."
-    echo "-v                    Verbose."
-    echo "-i                    Interactive."
-    echo "-f                    Feedback."
+    echo "-i                    Interactive (manual and autotests)."
+    echo "-f                    Generate feedback (after running all tests)."
     echo "GRADING_DIRECTORY     Use instead of default."
     echo
 }
 
-while getopts ":h:v:i:f" o; do case "${o}" in
-    h) help_message && exit ;;
-    v) verbose=true ;;
+while getopts ":hif" o; do case "${o}" in
+    h) help_message && exit 0 ;;
     i) interactive=true ;;
     f) feedback=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;

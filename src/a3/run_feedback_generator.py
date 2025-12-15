@@ -24,21 +24,23 @@ if __name__ == "__main__":
     dirs = pathname.split(os.sep)
 
     manual_grading_answers = f"{path}test_answers.txt"
-    # TODO: intervene with weight adjustments here
     grading = Grading.de_serialize(manual_grading_answers)
 
     # Put autograded results in Grading object
     autograding_answers = f"{path}results.json"
-    # TODO: sections shouldn't be hardcoded?
-    section_functionality = grading.add_section("Required functionality", 16)
     with open(autograding_answers, mode="r") as f:
         autograder_results = json.load(f)
 
-    # TODO: intervene with weight adjustments here
     for test in autograder_results["tests"]:
-        section_functionality.add_result_with_partial_grade(
-            test["name"], test["score"], test["max_score"], test.get("output", "")
+        test_section = grading.add_section(test["name"], 1)
+        test_section.add_result_with_partial_grade(
+            test.get("output",""), test["score"], test["max_score"])
         )
+
+    # TODO: pull weights from file
+    weights = {}
+    for section in grading.sections():
+        section.weight = weights.get(section.name, 1)
 
     student: Student = get_student_info_from_lea(dirs[-1], due_date)
     grading.days_late = student.days_late

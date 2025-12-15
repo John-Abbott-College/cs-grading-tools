@@ -9,7 +9,7 @@ import json
 
 grading = Grading()
 
-def run_manual_tests(autograding_answers):
+def run_manual_tests():
     section_edits_required = grading.add_section("Submission issues", 1)
     section_coding_quality = grading.add_section("Code quality", 1)
     section_well_tested = grading.add_section("assignment3.py file used correctly", 1)
@@ -40,12 +40,12 @@ if __name__ == "__main__":
     manual_grading_answers = f"{path}test_answers.txt"
 
     if not os.path.exists(manual_grading_answers):
-        run_manual_tests(autograding_answers)
+        run_manual_tests()
         with open(manual_grading_answers, "w", encoding="utf-8") as fh:
             print(str(grading), file=fh)
     else:
         ans = input("Do you want to re-answer questions? ")
         if "y" in ans:
-            run_manual_tests(autograding_answers)
+            run_manual_tests()
             with open(manual_grading_answers, "w", encoding="utf-8") as fh:
                 print(str(grading), file=fh)

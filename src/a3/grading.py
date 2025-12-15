@@ -26,14 +26,14 @@ class Grading:
         out_of = 0
         total = 0
         for section in self.sections:
-            out_of += section.max_grade
-            total += section.grade()
+            out_of += section.max_grade * section.weight
+            total += section.grade() * section.weight
         return total
 
     def out_of(self) -> int:
         total = 0
         for section in self.sections:
-            total += section.max_grade
+            total += section.max_grade * section.weight
         return total
 
     def late_penalty(self) -> float:
@@ -80,7 +80,7 @@ class Section:
         self.name = name.replace(Section.separator, " ")
         self.max_grade = max_grade
         self.min_grade = min_grade
-        self.weight = self.max_grade
+        self.weight = 1
 
     def ask_question(self, question, response, grade: float) -> str:
         ans = input(question + " ")
@@ -107,12 +107,11 @@ class Section:
         self.deductions.append(Deductions(grade, response))
         print(response)
 
-    def add_result_with_partial_grade(self, question, score, max_score, output):
+    def add_result_with_partial_grade(self, question, score, max_score):
         if score != max_score:
             result, response = self._determine_partial_grade(question.replace(":",""), max_score)
         else:
-            result, response = score, f"{question.replace(":","")}: "
-        response += output.replace(":", "")
+            result, response = score, f"{question.replace(":","")}"
         deduction = abs(result - max_score)
         self.deductions.append(Deductions(deduction, response))
 
