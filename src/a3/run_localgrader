@@ -6,6 +6,12 @@ interactive=false
 feedback=false
 rubric=false
 
+AUTOGRADE_SCRIPT="run_tests.py"
+MANUALGRADE_SCRIPT="run_manualgrader.py"
+FEEDBACK_SCRIPT="run_feedback_generator.py"
+GRADING_DIR="${1:-submissions}"
+PDF_CSS="pdf.css"
+
 ###################################
 ### Script Usage and Parameters ###
 ###################################
@@ -32,12 +38,6 @@ while getopts ":hifr" o; do case "${o}" in
 esac done
 
 shift $((OPTIND - 1));
-
-AUTOGRADE_SCRIPT="run_tests.py"
-MANUALGRADE_SCRIPT="run_manualgrader.py"
-FEEDBACK_SCRIPT="run_feedback_generator.py"
-GRADING_DIR="${1:-submissions}"
-PDF_CSS="pdf.css"
 
 ###################################
 ### Script ###

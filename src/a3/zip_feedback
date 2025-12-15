@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+shopt -s nullglob
+
+GRADING_DIR="${1:-submissions}"
+OUTPUT_ZIP="${GRADING_DIR}/Assignments.zip"
+OUTPUT_CSV="${GRADING_DIR}/grades.csv"
+
+echo $OUTPUT_ZIP
+echo $OUTPUT_CSV
+
+# Find the csvs and make the grades spreadsheet
+rm -f $OUTPUT_CSV
+find ${GRADING_DIR} -type f -name "*.csv" \
+  -exec cat {} + | tee $OUTPUT_CSV
+
+# Find the pdfs and make the zip
+rm -f $OUTPUT_ZIP
+find ${GRADING_DIR} -type f -regextype egrep -regex ".*/[0-9]{7}_.*.pdf" \
+  -exec zip -j -r $OUTPUT_ZIP {} +
+
+# List the created archive files for reassurance :)
+unzip -l $OUTPUT_ZIP
