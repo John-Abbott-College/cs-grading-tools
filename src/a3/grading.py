@@ -105,7 +105,6 @@ class Section:
     def add_result(self, response, grade: float):
         response = response.replace("\n", "<br>")
         self.deductions.append(Deductions(grade, response))
-        print(response)
 
     def add_result_with_partial_grade(self, question, score, max_score, output, ans=-1):
         if score != max_score:
@@ -151,12 +150,12 @@ class Section:
             else ""
         )
         response_dict = {
-            0: "not done",
+            0: "incorrect",
             1: "attempted but significant issues",
             2: "attempted with major issues",
             3: "reasonable attempt with some issues",
             4: "good, with 1 or more small mistakes",
-            5: "no issues."
+            5: "no issues"
         }
         result = (ans / 5) * grade
         response = f"{question}: {response_dict[ans]}. {additional_feedback}"

@@ -10,13 +10,16 @@ help_message() {
     echo "Usage: $0 [-h] [GRADING_DIRECTORY]"
     echo "Runner for local gradescope emulation. Runs autograding tests by default."
     echo ""
+    echo "params:"
+    echo "GRADING_DIRECTORY     Use instead of default (./submissions)"
+    echo ""
     echo "options:"
     echo "-h                    Print this help message."
     echo "-r                    Generate rubric (before running all tests)."
     echo "-i                    Interactive (manual and autotests)."
+    echo "-s                    Skip submissions that have already been graded."
     echo "-f                    Generate feedback markdown/csv (after running all tests)."
-    echo "-p                    Generate pdf during feedback generation"
-    echo "GRADING_DIRECTORY     Use instead of default."
+    echo "-p                    Generate pdf during feedback generation."
     echo
 }
 
@@ -95,7 +98,8 @@ function interactivegrade {
 function generate_pdf {
   local feedback_file="${1}"
   PANDOC_OPTS=( --standalone --highlight-style=kate --from=commonmark_x --to=html5 )
-  WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" )
+  WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" --quiet )
+  echo "Generating pdf ${feedback_file%.*}.pdf"
   pandoc "${PANDOC_OPTS[@]}" "${feedback_file}" | weasyprint "${WEASYPRINT_OPTS[@]}" - - > "${feedback_file%.*}.pdf"
 }
 

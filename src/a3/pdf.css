@@ -36,7 +36,7 @@ q {
 @media print {
   html {
     color: black;
-    color: cmyk(35%, 60%, 60%, 100%); /* Warm black */
+    /* color: device-cmyk(35%, 60%, 60%, 100%); */
   }
   h1,
   h2,
@@ -45,7 +45,7 @@ q {
   h5,
   h6 {
     color: #20435c;
-    color: cmyk(65%, 27%, 0%, 64%);
+    /* color: device-cmyk(65%, 27%, 0%, 64%); */
   }
   code,
   kbd,
@@ -85,7 +85,7 @@ q {
   a:link {
     text-decoration: none;
     color: #377063;
-    color: cmyk(51%, 0%, 12%, 56%);
+    /* color: device-cmyk(51%, 0%, 12%, 56%); */
   }
   a {
     white-space: nowrap;

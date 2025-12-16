@@ -7,9 +7,6 @@ GRADING_DIR="${1:-submissions}"
 OUTPUT_ZIP="${GRADING_DIR}/Assignments.zip"
 OUTPUT_CSV="${GRADING_DIR}/grades.csv"
 
-echo $OUTPUT_ZIP
-echo $OUTPUT_CSV
-
 # Approach adapted from:
 # https://www.tutorialpedia.org/blog/add-a-newline-only-if-it-doesn-t-exist/
 function ensure_newline() {
@@ -21,12 +18,13 @@ function ensure_newline() {
 rm -f $OUTPUT_CSV
 export -f ensure_newline
 find ${GRADING_DIR} -type f -name "*.csv" \
-  -exec sh -c 'ensure_newline "$0"' {} \; -exec cat {} + | tee $OUTPUT_CSV
+  -exec sh -c 'ensure_newline "$0"' {} \; -exec cat {} + | sort | tee $OUTPUT_CSV
 
 # Find the pdfs and make the zip
 rm -f $OUTPUT_ZIP
 find ${GRADING_DIR} -type f -regextype egrep -regex ".*/[0-9]{7}_.*.pdf" \
-  -exec zip -j -r $OUTPUT_ZIP {} +
+  -exec zip -jrq $OUTPUT_ZIP {} +
 
 # List the created archive files for reassurance :)
 unzip -l $OUTPUT_ZIP
+cat $OUTPUT_CSV
