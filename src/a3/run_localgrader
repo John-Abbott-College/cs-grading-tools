@@ -16,6 +16,7 @@ help_message() {
     echo "options:"
     echo "-h                    Print this help message."
     echo "-r                    Generate rubric (before running all tests)."
+    echo "-a                    Autograding tests."
     echo "-i                    Interactive (manual and autotests)."
     echo "-s                    Skip submissions that have already been graded."
     echo "-f                    Generate feedback markdown/csv (after running all tests)."
@@ -26,6 +27,7 @@ help_message() {
 interactive=false
 feedback=false
 rubric=false
+auto=false
 skip=false
 pdf=false
 
@@ -36,6 +38,7 @@ while getopts ":hifrsp" o; do case "${o}" in
     r) rubric=true ;;
     s) skip=true ;;
     p) pdf=true ;;
+    a) auto=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
@@ -123,17 +126,23 @@ function generate_rubric {
 
 function grade_student_dir {
   local student_dir="${1}"
-  get_student_files $student_dir
   if ${interactive}; then
+    get_student_files $student_dir
     interactivegrade $student_dir
-  elif ${rubric}; then
-    generate_rubric $student_dir
-  elif ${feedback}; then
-    generate_feedback $student_dir
-  else
+    clean_student_files
+  elif ${auto}; then
+    get_student_files $student_dir
     autograde $student_dir
+    clean_student_files
+  elif ${rubric}; then
+    get_student_files $student_dir
+    generate_rubric $student_dir
+    clean_student_files
+  elif ${feedback}; then
+    get_student_files $student_dir
+    generate_feedback $student_dir
+    clean_student_files
   fi
-  clean_student_files
 }
 
 function error() {

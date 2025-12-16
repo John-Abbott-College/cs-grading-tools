@@ -86,7 +86,8 @@ def give_feedback(
 # =============================================================================
 
 def print_grades(student: Student, evaluation: Grading, file: TextIO = sys.stdout):
-    file.write(f"{student.name},{student.id},{evaluation.grade()},See LEA for feedback.")
+    final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
+    file.write(f"{student.name},{student.id},{final_grade},See LEA for feedback.")
 
 def print_evaluation(
     student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
