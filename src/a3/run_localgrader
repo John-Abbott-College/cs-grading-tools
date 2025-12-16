@@ -14,7 +14,8 @@ help_message() {
     echo "-h                    Print this help message."
     echo "-r                    Generate rubric (before running all tests)."
     echo "-i                    Interactive (manual and autotests)."
-    echo "-f                    Generate feedback (after running all tests)."
+    echo "-f                    Generate feedback markdown/csv (after running all tests)."
+    echo "-p                    Generate pdf during feedback generation"
     echo "GRADING_DIRECTORY     Use instead of default."
     echo
 }
@@ -23,13 +24,15 @@ interactive=false
 feedback=false
 rubric=false
 skip=false
+pdf=false
 
-while getopts ":hifrs" o; do case "${o}" in
+while getopts ":hifrsp" o; do case "${o}" in
     h) help_message && exit 0 ;;
     i) interactive=true ;;
     f) feedback=true ;;
     r) rubric=true ;;
     s) skip=true ;;
+    p) pdf=true ;;
     \?) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
@@ -79,13 +82,21 @@ function interactivegrade {
   autograde $student_dir
   manualgrade $student_dir
   read -p "Rerun and reapply autogrades? y/n: " grade_this_dir
-  if [[ ${grade_this_dir} == "y" ]]; then
+  while [[ ${grade_this_dir} == "y" ]]; do
     clean_student_files
     get_student_files $student_dir
     autograde $student_dir
     manualgrade $student_dir
-  fi
+    read -p "Rerun and reapply autogrades? y/n: " grade_this_dir
+  done
   echo "On to the next student."
+}
+
+function generate_pdf {
+  local feedback_file="${1}"
+  PANDOC_OPTS=( --standalone --highlight-style=kate --from=commonmark_x --to=html5 )
+  WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" )
+  pandoc "${PANDOC_OPTS[@]}" "${feedback_file}" | weasyprint "${WEASYPRINT_OPTS[@]}" - - > "${feedback_file%.*}.pdf"
 }
 
 function generate_feedback {
@@ -94,9 +105,9 @@ function generate_feedback {
   python ${FEEDBACK_SCRIPT} ${student_dir} 0 || error "Error caught: cleaning student files and exiting."
   local feedback_file=$(find ${student_dir} -type f -name "*.md")
   mdformat ${feedback_file}
-  PANDOC_OPTS=( --standalone --highlight-style=kate --from=commonmark_x --to=html5 )
-  WEASYPRINT_OPTS=( --stylesheet "${PDF_CSS}" )
-  pandoc "${PANDOC_OPTS[@]}" "${feedback_file}" | weasyprint "${WEASYPRINT_OPTS[@]}" - - > "${feedback_file%.*}.pdf"
+  if ${pdf}; then
+    generate_pdf ${feedback_file}
+  fi
 }
 
 function generate_rubric {

@@ -10,10 +10,18 @@ OUTPUT_CSV="${GRADING_DIR}/grades.csv"
 echo $OUTPUT_ZIP
 echo $OUTPUT_CSV
 
+# Approach adapted from:
+# https://www.tutorialpedia.org/blog/add-a-newline-only-if-it-doesn-t-exist/
+function ensure_newline() {
+  local file="${1}"
+  [ -s "$file" ] && ! tail -c1 "$file" | grep -q '^$' && sed -i '$a\' "$file" || sed -i '$a\' "$file"
+}
+
 # Find the csvs and make the grades spreadsheet
 rm -f $OUTPUT_CSV
+export -f ensure_newline
 find ${GRADING_DIR} -type f -name "*.csv" \
-  -exec cat {} + | tee $OUTPUT_CSV
+  -exec sh -c 'ensure_newline "$0"' {} \; -exec cat {} + | tee $OUTPUT_CSV
 
 # Find the pdfs and make the zip
 rm -f $OUTPUT_ZIP

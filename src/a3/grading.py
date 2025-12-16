@@ -3,17 +3,18 @@ from dataclasses import dataclass
 
 
 class Grading:
-    def __init__(self):
+    def __init__(self, manual_input=True):
         self._sections: dict[Section] = {}
         self.title = ""
         self.days_late = 0
         self.penalty_per_day = 0.10
         self.rubric = dict()
+        self.manual_input=manual_input
 
     def add_section(self, name, max_grade, min_grade=0) -> Section:
         if name in self._sections:
             return self._sections[name]
-        section = Section(name, max_grade, min_grade)
+        section = Section(name, max_grade, min_grade, self.manual_input)
         self._sections[section.name] = section
         return section
 
@@ -73,12 +74,13 @@ class Grading:
 class Section:
     separator = "|"
 
-    def __init__(self, name, max_grade: int, min_grade: int = 0):
+    def __init__(self, name, max_grade: int, min_grade: int = 0, manual_input: bool = True):
         self.deductions: list[Deductions] = []
         self.name = name.replace(Section.separator, " ")
         self.max_grade = max_grade
         self.min_grade = min_grade
         self.weight = 1
+        self.manual_input = manual_input
 
     def ask_question(self, question, response, grade: float) -> str:
         ans = input(question + " ")
@@ -94,8 +96,8 @@ class Section:
             self.deductions.append(Deductions(grade, question + ": " + response))
         return ans
 
-    def ask_question_with_partial_grade(self, question, grade: float):
-        result, response = self._determine_partial_grade(question=question, grade=grade)
+    def ask_question_with_partial_grade(self, question, grade: float, ans=-1):
+        result, response = self._determine_partial_grade(question=question, grade=grade, ans=ans)
         deduction = abs(result - grade)
         self.deductions.append(Deductions(deduction, response))
 
@@ -105,9 +107,9 @@ class Section:
         self.deductions.append(Deductions(grade, response))
         print(response)
 
-    def add_result_with_partial_grade(self, question, score, max_score, output):
+    def add_result_with_partial_grade(self, question, score, max_score, output, ans=-1):
         if score != max_score:
-            result, response = self._determine_partial_grade(question.replace(":",""), max_score, output=output)
+            result, response = self._determine_partial_grade(question.replace(":",""), max_score, output=output, ans=ans)
         else:
             result, response = score, f"{output.replace(":","")}"
         deduction = abs(result - max_score)
@@ -132,15 +134,22 @@ class Section:
             + "\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
         )
 
-    def _determine_partial_grade(self, question, grade, output="") -> tuple(float, str):
-        ans = -1
+    def _determine_partial_grade(self, question, grade, output="", ans=-1) -> tuple(float, str):
         while ans < 0 or ans > 5:
-            ans = input(f"\n{question}\n\t{output}\n\tAssign grade on 5 point scale (5 is perfect, 0 is not at all, etc): ")
+            ans = (
+                input(f"\n{question}\n\t{output}\n\tAssign grade on 5 point scale (5 is perfect, 0 is not at all, etc): ")
+                if self.manual_input
+                else 0
+            )
             try:
                 ans = int(ans)
             except ValueError:
                 pass
-        additional_feedback = input("\tany additional feedback? Leave empty (hit enter) if no: ")
+        additional_feedback = (
+            input("\tany additional feedback? Leave empty (hit enter) if no: ")
+            if self.manual_input
+            else ""
+        )
         response_dict = {
             0: "not done",
             1: "attempted but significant issues",
