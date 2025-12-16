@@ -1,12 +1,23 @@
 import pytest
 
 import temperatures as t
-from csv_temperature_indices import MAX_TEMP, MIN_TEMP, YEAR, DATE_TIME
+from csv_temperature_indices import MAX_TEMP, MIN_TEMP, DATE_TIME
+from typing import Callable
+import inspect
 
 import csv
 
 test_filename = "test_temperatures.csv"
-number_of_correct_lines = 7853
+NUMBER_OF_CORRECT_LINES = 7853
+
+
+def get_func_calls(caller: Callable) -> list[str]:
+    nodes = ast.walk(ast.parse(inspect.getsource(caller)))
+    func_calls = (call for call in nodes if isinstance(call, ast.Call))
+    call_names = [
+        call.func.id for call in func_calls if isinstance(call.func, ast.Name)
+    ]
+    return call_names
 
 
 # clears the data before every test
@@ -15,7 +26,6 @@ def clear_data():
     t.DATA_COLUMN_YEARS.clear()
     t.DATA_COLUMN_MAX_TEMPS.clear()
     t.DATA_COLUMN_MIN_TEMPS.clear()
-
 
 @pytest.fixture()
 def index_and_temps_for_date():
@@ -31,6 +41,41 @@ def index_and_temps_for_date():
             count += 1
     return 0, 0, 0
 
+def test_read_airport_temperatures_type_hinting():
+    sig = inspect.signature(t.__getattribute__("read_airport_temperatures"))
+    sig_parameters = sig.parameters
+    sig_return = sig.return_annotation
+    assert len(sig_parameters) == 1
+    assert sig_parameters["filename"].annotation is str
+    assert sig_return is None
+
+
+def test_get_list_of_unique_years():
+    sig = inspect.signature(t.__getattribute__("get_list_of_unique_years"))
+    sig_parameters = sig.parameters
+    sig_return = sig.return_annotation
+    assert len(sig_parameters) == 0
+    assert sig_return in [list[int], list[float]]
+
+
+def test_get_extreme_temperature_count_type_hinting():
+    sig = inspect.signature(t.__getattribute__("get_extreme_temperature_count"))
+    sig_parameters = sig.parameters
+    sig_return = sig.return_annotation
+    assert len(sig_parameters) == 3
+    assert sig_parameters["this_year"].annotation in [int, float]
+    assert sig_parameters["value"].annotation is float
+    assert sig_parameters["check_below"].annotation is bool
+    assert sig_return is int
+
+
+def test_plot_type_hinting():
+    sig = inspect.signature(t.__getattribute__("plot"))
+    sig_parameters = sig.parameters
+    sig_return = sig.return_annotation
+    assert len(sig_parameters) == 0
+    assert sig_return is None
+
 
 def test_read_temperature_file_lists_same_size():
     t.read_airport_temperatures(test_filename)
@@ -40,7 +85,7 @@ def test_read_temperature_file_lists_same_size():
 
 def test_read_temperature_file_lists_correct_size():
     t.read_airport_temperatures(test_filename)
-    assert len(t.DATA_COLUMN_MIN_TEMPS) == number_of_correct_lines
+    assert len(t.DATA_COLUMN_MIN_TEMPS) == NUMBER_OF_CORRECT_LINES
 
 
 def test_read_temperature_file_correct_data_for_index(index_and_temps_for_date):
@@ -60,24 +105,24 @@ def test_unique_years():
 
 def test_get_extreme_temperature_count_below():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperatures(2004, t.LOW_THRESHOLD, True)
+    n = t.get_extreme_temperature_count(2004, t.LOW_THRESHOLD, True)
     assert n == 17
 
 
 def test_get_extreme_temperature_count_above():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperatures(2004, t.HIGH_THRESHOLD, False)
+    n = t.get_extreme_temperature_count(2004, t.HIGH_THRESHOLD, False)
     assert n == 12
 
 
 def test_get_extreme_temperature_count_below_no_hard_coding():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperatures(2004, t.LOW_THRESHOLD + 10, True)
+    n = t.get_extreme_temperature_count(2004, t.LOW_THRESHOLD + 10, True)
     assert n == 71
 
 
 def test_get_extreme_temperature_count_above_no_hard_coding():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperatures(2004, t.HIGH_THRESHOLD - 10, False)
+    n = t.get_extreme_temperature_count(2004, t.HIGH_THRESHOLD - 10, False)
     assert 142 <= n <= 144
 

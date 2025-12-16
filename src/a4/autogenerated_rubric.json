@@ -1,0 +1,23 @@
+{
+  "Docstrings": 1,
+  "Submission issues": 1,
+  "Code quality": 1,
+  "if __name__ == '__main__' used correctly": 1,
+  "Plot data": 1,
+  "Plot quality": 1,
+  "Linear fit": 1,
+  "Linear fit plot": 1,
+  "Linear fit print": 1,
+  "test_read_airport_temperatures_type_hinting": 1,
+  "test_get_list_of_unique_years": 1,
+  "test_get_extreme_temperature_count_type_hinting": 1,
+  "test_plot_type_hinting": 1,
+  "test_read_temperature_file_lists_same_size": 1,
+  "test_read_temperature_file_lists_correct_size": 1,
+  "test_read_temperature_file_correct_data_for_index": 1,
+  "test_unique_years": 1,
+  "test_get_extreme_temperature_count_below": 1,
+  "test_get_extreme_temperature_count_above": 1,
+  "test_get_extreme_temperature_count_below_no_hard_coding": 1,
+  "test_get_extreme_temperature_count_above_no_hard_coding": 1
+}
