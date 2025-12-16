@@ -10,9 +10,13 @@ import json
 grading = Grading()
 
 def run_manual_tests(autograding_answers):
+    section_docstrings = grading.add_section("Docstrings", 1)
     section_edits_required = grading.add_section("Submission issues", 1)
     section_coding_quality = grading.add_section("Code quality", 1)
     section_well_tested = grading.add_section("assignment3.py file used correctly", 1)
+
+    # Docstrings filled in
+    section_docstrings.ask_question_with_partial_grade("docstring file descriptions are completed on each file", 1)
 
     # Edits required
     section_edits_required.ask_question_with_partial_grade("no major edits required to get the code to work properly", 1)
@@ -30,7 +34,7 @@ def run_manual_tests(autograding_answers):
     for test in autograder_results["tests"]:
         test_section = grading.add_section(test["name"], 1)
         test_section.add_result_with_partial_grade(
-            test.get("output",""), test["score"], test["max_score"]
+            test.get("name"), test["score"], test["max_score"], test.get("output","")
         )
 
 

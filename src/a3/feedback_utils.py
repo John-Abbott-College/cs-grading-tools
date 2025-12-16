@@ -7,7 +7,7 @@ from typing import Optional, TextIO
 from grading import Grading
 
 OUTPUT_COMMENTS: list[tuple[range, str]] = [
-    (range(100, 101), "Perfect!"),
+    (range(100, 200), "Perfect!"),
     (range(90, 100), "Excellent!"),
     (range(80, 90), "Great!"),
     (range(70, 80), "Good!"),

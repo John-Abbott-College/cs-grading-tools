@@ -11,6 +11,8 @@ from test_helper import (
     get_func_calls,
     contains_func,
     uses_condition,
+    hex_area,
+    actual_net_income
 )
 
 files_to_test = {"func_file": "my_functions.py", "main_file": "assignment3.py"}
@@ -22,7 +24,7 @@ class TestFiles(unittest.TestCase):
     def setUp(self):
         self.files_to_test = list(files_to_test.values())
 
-    @weight(1)
+    @weight(0)
     def test_source_files(self):
         """Check submitted code files"""
         for file in self.files_to_test:
@@ -45,6 +47,11 @@ class TestFuncSig(unittest.TestCase):
             ]
             self.expected_return_types = [float, float, int, int, float, float]
             self.expected_count_params = [2, 2, 1, 2, 1, 3]
+            self.bonus_functions_to_check = [
+                "actual_net_income",
+            ]
+            self.bonus_return_types = [float]
+            self.bonus_count_params = [2]
         except ModuleNotFoundError as e:
             print(e)
             self.fail(f"Cannot find {files_to_test['func_file']}. Did you rename it?")
@@ -53,7 +60,7 @@ class TestFuncSig(unittest.TestCase):
 
     @weight(1)
     def test_check_for_inner_functions(self):
-        """Scanning functions indentation level"""
+        """(Functions) indentation level"""
         function_dict = get_inner_func(self.student_code)
         for func, inner_list in function_dict.items():
             msg = ", ".join(i + "()" for i in inner_list)
@@ -71,7 +78,7 @@ class TestFuncSig(unittest.TestCase):
 
     @weight(1)
     def test_function_definitions(self):
-        """Checking if all the functions are there"""
+        """(Functions) all required functions defined"""
         for func_name in self.functions_to_check:
             self.assertTrue(
                 contains_func(self.student_code, func_name),
@@ -82,7 +89,7 @@ class TestFuncSig(unittest.TestCase):
 
     @weight(1)
     def test_function_signatures(self):
-        """Checking all the functions' signatures"""
+        """(Functions) all required function parameters"""
         try:
             for func_name, params_count in zip(
                 self.functions_to_check,
@@ -102,7 +109,6 @@ class TestFuncSig(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unknown error{e}")
         print("Good job! All functions have the correct number of parameters")
-
 
 class TestQ1Evaluator(unittest.TestCase):
     def setUp(self):
@@ -127,57 +133,106 @@ class TestQ1Evaluator(unittest.TestCase):
             self.file_to_test = py_file
             self.student_code = __import__(py_file)
         except ModuleNotFoundError:
-            self.fail(f"No file named {self.file_to_test}. Di you rename it? ")
+            self.fail(f"No file named {self.file_to_test}. Did you rename it? ")
         except Exception as e:
             self.fail(f"Unknown error {e}")
 
     @weight(1)
     def test_accuracy(self):
-        """Accuracy Test net_income()"""
-        gross_income = (
-            self.income_brackets[0] - 10
-        )  # ensuring it's a value in the first bracket
+        """(Accuracy) net_income()"""
+        # Basic case: lowest rate
+        gross_income = self.income_brackets[0] - 10
         tax_rate = self.tax_rates[0]
         expected_net_income = gross_income * (1 - tax_rate)
         hours_per_week = 25
         total_hours = hours_per_week * self.weeks_per_year
         hourly_rate = gross_income / total_hours
         try:
-            actual_net_income = self.student_code.net_income(
+            resulting_net_income = self.student_code.net_income(
                 hourly_rate=hourly_rate, hours_per_week=hours_per_week
             )
             self.assertAlmostEqual(
                 expected_net_income,
-                actual_net_income,
+                resulting_net_income,
                 places=FLOAT_PRECISION_TOL,
                 msg=f"Mistake in the income calculation, for hourly_salary={hourly_rate}, "
-                f"hours_per_week={hours_per_week}. Expected net income {expected_net_income:.2f}$"
-                f"But got: {actual_net_income:.2f}$",
+                f"hours_per_week={hours_per_week}. Expected net income {expected_net_income:.2f}, "
+                f"but got: {resulting_net_income:.2f}",
             )
         except Exception as e:
             self.fail(e)
         print("Perfect! Correctly calculated!")
 
     @weight(1)
+    def test_bonus_accuracy(self):
+        """(Accuracy, bonus) actual_net_income()"""
+        # Basic case: lowest rate
+        gross_income = self.income_brackets[0] - 10
+        tax_rate = self.tax_rates[0]
+        expected_net_income = gross_income * (1 - tax_rate)
+        hours_per_week = 25
+        total_hours = hours_per_week * self.weeks_per_year
+        hourly_rate = gross_income / total_hours
+        try:
+            actual_net_income = self.student_code.actual_net_income(
+                hourly_rate=hourly_rate, hours_per_week=hours_per_week
+            )
+            self.assertAlmostEqual(
+                expected_net_income,
+                actual_net_income,
+                places=FLOAT_PRECISION_TOL,
+                msg=f"Mistake in the actual income calculation, for hourly_salary={hourly_rate}, "
+                f"hours_per_week={hours_per_week}. Expected net income {expected_net_income:.2f}, "
+                f"but got: {actual_net_income:.2f}"
+            )
+        except Exception as e:
+            self.fail(f"{e}. NOTE: missing the bonus will not lower your grade.")
+        print("Perfect! Correctly calculated!")
+
+    @weight(1)
     def test_conditionals(self):
-        """Logic Test net_income()"""
+        """(Logic) net_income()"""
         try:
             weekly_hours = 40
             total_hours = weekly_hours * self.weeks_per_year
             for gross_income, tax_rate in zip(self.income_brackets, self.tax_rates):
                 expected_income = (gross_income - 10) * (1 - tax_rate)
                 calculated_income = self.student_code.net_income(
-                    hourly_rate=gross_income / total_hours, hours_per_week=weekly_hours
+                    hourly_rate= (gross_income - 10) / total_hours, hours_per_week=weekly_hours
                 )
                 self.assertAlmostEqual(
                     expected_income,
                     calculated_income,
                     places=6,
-                    msg=f"For a gross salary of {gross_income:.2f}$, I expect a net salary of {expected_income:.2f}$, but got {calculated_income:.2f}$",
+                    msg=f"For a gross salary of {gross_income:.2f}, "
+                        f"expected a net salary of {expected_income:.2f}, "
+                        f"but got {calculated_income:.2f}"
                 )
 
         except Exception as e:
             self.fail(e)
+        print("Perfect! Correctly calculated!")
+
+    @weight(1)
+    def test_bonus_conditionals(self):
+        """(Logic, bonus) actual_net_income()"""
+        try:
+            weekly_hours = 40
+            total_hours = weekly_hours * self.weeks_per_year
+            for gross_income, tax_rate in zip(self.income_brackets, self.tax_rates):
+                hourly_rate= (gross_income-10) / total_hours
+                expected_income = actual_net_income(hourly_rate, weekly_hours)
+                calculated_income = self.student_code.actual_net_income(hourly_rate, weekly_hours)
+                self.assertAlmostEqual(
+                    expected_income,
+                    calculated_income,
+                    places=6,
+                    msg=f"For a gross salary of {gross_income:.2f}, "
+                        f"I expect a net salary of {expected_income:.2f}, "
+                        f"but got {calculated_income:.2f}"
+                )
+        except Exception as e:
+            self.fail(f"{e}. NOTE: missing the bonus will not lower your grade.")
         print("Perfect! Correctly calculated!")
 
 
@@ -194,7 +249,7 @@ class TestQ2Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_concentration_accuracy(self):
-        """Accuracy Test concentration_percent()"""
+        """(Accuracy) concentration_percent()"""
         try:
             expected = 1  # or 100%
             value = self.student_code.concentration_percent(half_life=5, time=0)
@@ -229,19 +284,19 @@ class TestQ2Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_logic(self):
-        """Logic test intake_frequency()"""
+        """(Logic) intake_frequency()"""
         try:
             helper_func_name = self.student_code.concentration_percent.__name__
             function_to_test = self.student_code.intake_frequency
             self.assertTrue(
                 uses_condition(function_to_test),
                 "Oops, it seems like the active substance intake frequency is missing an important "
-                "part of the algorithm the if statement!",
+                "part of the algorithm (the if statement!)",
             )
             self.assertTrue(
                 uses_loop(function_to_test),
                 "Oops, it seems like the active substance intake frequency is missing an important "
-                "part of the algorithm the loop!",
+                "part of the algorithm (the loop!)",
             )
             func_calls = get_func_calls(function_to_test)
             is_calling_helper = helper_func_name in func_calls
@@ -255,12 +310,12 @@ class TestQ2Evaluator(unittest.TestCase):
         except TypeError as e:
             self.fail(e)
         print(
-            "Great! You used all the statements and to determine the intake frequency"
+            "Great, used necessary concepts to determine the intake frequency"
         )
 
     @weight(1)
     def test_call_intake_frequency(self):
-        """Accuracy Test intake_frequency()"""
+        """(Accuracy) intake_frequency()"""
 
         half_life = 5.5  # caffeine
         expected = math.log(20) * half_life / math.log(2)
@@ -279,11 +334,11 @@ class TestQ2Evaluator(unittest.TestCase):
             self.fail(a)
         except TypeError as e:
             self.fail(e)
-        print("Perfect! intake_frequency() is correctly calculated!")
+        print("Perfect! intake_frequency() is correctly calculated.")
 
     @weight(1)
     def test_intake_frequency_upper_bound(self):
-        """Logic Test Upper bound frequency_intake()"""
+        """(Logic) upper bound frequency_intake()"""
         half_life = 1
         expected = math.ceil(math.log(20) * half_life / math.log(2))
 
@@ -318,7 +373,7 @@ class TestQ3Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_gcd_logic(self):
-        """Logic Test gcd()"""
+        """(Logic) gcd()"""
         try:
             function = self.student_code.gcd
             self.assertTrue(uses_loop(function), "gcd() isn't using a loop")
@@ -330,7 +385,7 @@ class TestQ3Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_gcd_accuracy(self):
-        """Accuracy Test gcd()"""
+        """(Accuracy) gcd()"""
         inputs = [(459, 322), (3, 15), (512, 1048)]
         expected_output = [1, 3, 8]
         try:
@@ -356,16 +411,12 @@ class TestQ4Evaluator(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unknown error {e}")
 
-    def hex_area(self, a):
-        """Helper to avoid repeating code"""
-        return (3 / 2) * math.sqrt(3) * (a**2)
-
     @weight(1)
     def test_hex_area(self):
-        """Accuracy Test hex_area()"""
+        """(Accuracy) hex_area()"""
         try:
             a = 1
-            expected_area = self.hex_area(a)
+            expected_area = hex_area(a)
             actual_area = self.student_code.hex_area(a)
             self.assertAlmostEqual(
                 expected_area,
@@ -382,7 +433,7 @@ class TestQ4Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_using_loop(self):
-        """Logic test check if green_area() uses loops"""
+        """(Logic) green_area()"""
         try:
             function = self.student_code.green_area
             self.assertTrue(
@@ -394,7 +445,7 @@ class TestQ4Evaluator(unittest.TestCase):
 
     @weight(1)
     def test_green_area_accuracy(self):
-        """Accuracy Test green_area()"""
+        """(Accuracy) green_area()"""
         try:
             a0 = 2
             w = 3
@@ -406,7 +457,7 @@ class TestQ4Evaluator(unittest.TestCase):
                 a0 + w * i for i in range(first_green_idx, num_hex, space_between_green)
             ]
             areas_green = [
-                self.hex_area(a_green) - self.hex_area(a_green - w)
+                hex_area(a_green) - hex_area(a_green - w)
                 for a_green in green_sides
             ]
             expected_total_area = sum(areas_green)
@@ -422,11 +473,11 @@ class TestQ4Evaluator(unittest.TestCase):
             self.fail(
                 f"It seems like {self.file_to_test} doesn't contain the tested function "
             )
-        print("Great the green_area() does its job pretty well!")
+        print("Great, green_area() does its job pretty well.")
 
     @weight(1)
     def test_varying_num_hex(self):
-        """Logic Test 2 validating the num_hex is taken into account"""
+        """(Logic) num_hex is taken into account"""
         try:
             a0 = 2
             w = 3
@@ -439,7 +490,7 @@ class TestQ4Evaluator(unittest.TestCase):
                     for i in range(first_green_idx, num_hex, space_between_green)
                 ]
                 areas_green = [
-                    self.hex_area(a_green) - self.hex_area(a_green - w)
+                    hex_area(a_green) - hex_area(a_green - w)
                     for a_green in green_sides
                 ]
                 expected_total_area = sum(areas_green)
@@ -455,4 +506,4 @@ class TestQ4Evaluator(unittest.TestCase):
             self.fail(
                 f"It seems like {self.file_to_test} doesn't contain the tested function "
             )
-        print("Great the green_area() does it's job pretty well!")
+        print("Great, green_area() takes num_hex into account.")

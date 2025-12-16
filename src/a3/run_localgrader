@@ -140,11 +140,15 @@ if ${rubric}; then
   grade_student_dir "${student_dir}/"
 else
   mapfile -t -d '' dirs < <(find ${GRADING_DIR} -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+  mapfile -t -d '' already_graded < <(find ${GRADING_DIR} -type f -name "${TEST_ANSWER_FILE}" -exec dirname {} \; | sort)
   if ${skip}; then
-    mapfile -t -d '' skippable_dirs < <(find ${GRADING_DIR} -type f -name "${TEST_ANSWER_FILE}" -exec dirname {} \; | sort)
+    dirs=($(comm --nocheck-order -3 <(printf "%s\n" "${dirs[@]}") <(printf "%s\n" "${already_graded[@]}")))
     echo "Skipping the following directories (already graded):"
+    printf '%s\n' "${already_graded[@]}"
+  elif ${feedback}; then
+    dirs=(${already_graded[@]})
+    echo "Only considering the following directories (already graded):"
     printf '%s\n' "${dirs[@]}"
-    dirs=($(comm --nocheck-order -3 <(printf "%s\n" "${dirs[@]}") <(printf "%s\n" "${skippable_dirs[@]}")))
   fi
   for D in "${dirs[@]}"; do grade_student_dir "${D}/"; done
 fi

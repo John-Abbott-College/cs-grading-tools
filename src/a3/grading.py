@@ -30,7 +30,8 @@ class Grading:
     def out_of(self) -> int:
         total = 0
         for section in self.sections:
-            total += section.max_grade * section.weight
+            if "bonus" not in section.name:
+                total += section.max_grade * section.weight
         return total
 
     def late_penalty(self) -> float:
@@ -104,11 +105,11 @@ class Section:
         self.deductions.append(Deductions(grade, response))
         print(response)
 
-    def add_result_with_partial_grade(self, question, score, max_score):
+    def add_result_with_partial_grade(self, question, score, max_score, output):
         if score != max_score:
-            result, response = self._determine_partial_grade(question.replace(":",""), max_score)
+            result, response = self._determine_partial_grade(question.replace(":",""), max_score, output=output)
         else:
-            result, response = score, f"{question.replace(":","")}"
+            result, response = score, f"{output.replace(":","")}"
         deduction = abs(result - max_score)
         self.deductions.append(Deductions(deduction, response))
 
@@ -131,22 +132,22 @@ class Section:
             + "\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
         )
 
-    def _determine_partial_grade(self, question, grade) -> tuple(float, str):
+    def _determine_partial_grade(self, question, grade, output="") -> tuple(float, str):
         ans = -1
         while ans < 0 or ans > 5:
-            ans = input(f"{question} Assign grade on 5 point scale (5 is perfect, 0 is not at all, etc) ")
+            ans = input(f"\n{question}\n\t{output}\n\tAssign grade on 5 point scale (5 is perfect, 0 is not at all, etc): ")
             try:
                 ans = int(ans)
             except ValueError:
                 pass
-        additional_feedback = input("any additional feedback? Leave empty (hit enter) if no ")
+        additional_feedback = input("\tany additional feedback? Leave empty (hit enter) if no: ")
         response_dict = {
             0: "not done",
             1: "attempted but significant issues",
             2: "attempted with major issues",
             3: "reasonable attempt with some issues",
             4: "good, with 1 or more small mistakes",
-            5: "perfect"
+            5: "no issues."
         }
         result = (ans / 5) * grade
         response = f"{question}: {response_dict[ans]}. {additional_feedback}"
