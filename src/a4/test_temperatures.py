@@ -60,24 +60,24 @@ def test_unique_years():
 
 def test_get_extreme_temperature_count_below():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperature_count(2004, t.LOW_THRESHOLD, True)
+    n = t.get_extreme_temperatures(2004, t.LOW_THRESHOLD, True)
     assert n == 17
 
 
 def test_get_extreme_temperature_count_above():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperature_count(2004, t.HIGH_THRESHOLD, False)
+    n = t.get_extreme_temperatures(2004, t.HIGH_THRESHOLD, False)
     assert n == 12
 
 
 def test_get_extreme_temperature_count_below_no_hard_coding():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperature_count(2004, t.LOW_THRESHOLD + 10, True)
+    n = t.get_extreme_temperatures(2004, t.LOW_THRESHOLD + 10, True)
     assert n == 71
 
 
 def test_get_extreme_temperature_count_above_no_hard_coding():
     t.read_airport_temperatures(test_filename)
-    n = t.get_extreme_temperature_count(2004, t.HIGH_THRESHOLD - 10, False)
+    n = t.get_extreme_temperatures(2004, t.HIGH_THRESHOLD - 10, False)
     assert 142 <= n <= 144
 
