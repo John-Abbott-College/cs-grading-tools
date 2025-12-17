@@ -11,11 +11,11 @@ def run_manual_tests(autograding_answers):
     section_docstrings = grading.add_section("Docstrings", 1)
     section_docstrings.ask_question_with_partial_grade("docstring file descriptions are completed on each file", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
 
-    section_edits_required = grading.add_section("Submission issues", 1)
-    section_edits_required.ask_question_with_partial_grade("no major edits required to get the code to work properly", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
-
     section_coding_quality = grading.add_section("Code quality", 1)
     section_coding_quality.ask_question_with_partial_grade("variables used appropriately", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
+
+    section_filename = grading.add_section("read_airport_temperatures filename parameter", 1)
+    section_filename.ask_question_with_partial_grade("read_airport_temperatures uses parameter, not hardcode to file path", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
 
     section_well_tested = grading.add_section("if __name__ == '__main__' used correctly", 1)
     section_well_tested.ask_question_with_partial_grade("temperatures.py produces plot and no extra output when temperatures.py run", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
@@ -34,6 +34,9 @@ def run_manual_tests(autograding_answers):
 
     section_line_fit_print = grading.add_section("Linear fit print", 1)
     section_line_fit_print.ask_question_with_partial_grade("Rate of change is printed", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
+
+    section_edits_required = grading.add_section("Submission issues", 1)
+    section_edits_required.ask_question_with_partial_grade("no other major edits required to get the code to work properly", 1, ans=5, response_ans="(note) full marks assumed, this grade may change when reviewed by instructor.")
 
     # Put autograded results in Grading object
     with open(autograding_answers, mode="r") as f:

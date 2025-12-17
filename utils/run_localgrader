@@ -53,7 +53,7 @@ MANUALGRADE_SCRIPT="run_manualgrader.py"
 FEEDBACK_SCRIPT="run_feedback_generator.py"
 GRADING_DIR="${1:-submissions}"
 
-PDF_CSS="../grading_tools/pdf.css"
+PDF_CSS="../../utils/pdf.css"
 SOLUTION_FOLDER="AAASOLUTIONZZZ"
 TEST_ANSWER_FILE="test_answers.txt"
 

@@ -8,7 +8,7 @@ def pytest_json_modifyreport(json_report):
         test["max_score"] = 1
         test["score"] = 1 if test.get("outcome")=="passed" else 0
         test["status"] = test.get("outcome")
-        test["output"] = "" if test.get("outcome")=="passed" else test.get("call").get("crash").get("message")
+        test["output"] = "" if test.get("outcome")=="passed" else test.get("call", {}).get("crash", {}).get("message")
         del test["nodeid"]
         del test["lineno"]
         del test["outcome"]

@@ -1,7 +1,7 @@
 
-from grading_tools.grading import Grading
-from grading_tools.unit_test import UnitTest
-from grading_tools.rubric import Rubric
+from jac_cs_grading_tools.grading import Grading
+from jac_cs_grading_tools.unit_test import UnitTest
+from jac_cs_grading_tools.rubric import Rubric
 
 
 def run_tests(this_rubric: Rubric, results: dict[str, UnitTest]) -> Grading:

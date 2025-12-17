@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 import re
 from typing import Optional, TextIO
-from grading import Grading
+from jac_cs_grading_tools.grading import Grading
 
 OUTPUT_COMMENTS: list[tuple[range, str]] = [
     (range(100, 200), "Perfect!"),
@@ -165,10 +165,6 @@ class MarkDownFormat:
 | Late            | -{evaluation.late_penalty(): .2f}   ({student.days_late: .2f} days)                               |
 | Grade           | {evaluation.grade():.2f} - {evaluation.late_penalty(): .2f}                                       |
 | Final Grade     | {final_grade:.2f} out of {evaluation.out_of()} ({final_grade / evaluation.out_of() * 100: 3.2f}%) |
-
-**Comment**
-
-{comment}
 
 """
 
