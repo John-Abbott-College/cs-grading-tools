@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from grading import Grading
-from feedback_utils import get_student_info_from_lea, give_feedback, Student
+from jac_cs_grading_tools.grading import Grading
+from jac_cs_grading_tools.feedback_utils import get_student_info_from_lea, give_feedback, Student
 import os
 import sys
 import json
 
-files = ["my_functions.py", "assignment3.py"]
-due_date = datetime(2025, 11, 12, 1)
+files = ["temperatures.py"]
+due_date = datetime(2025, 12, 2, 1)
 
 # ===============================================================================
 # ENTRY POINT
