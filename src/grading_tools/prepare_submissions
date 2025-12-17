@@ -39,8 +39,11 @@ clean_directory_names() {
   find "${submissions_dir}" -maxdepth 1 -name "* *" -type f
   for f in "${submissions_dir}/"*\ *; do
     mv -v "$f" "${f// /-}"
+    # or, using rename:
+    # rename -v 's/ /-/g'
   done
 }
+
 
 clean_unnecessary_directories() {
   local submissions_dir="${1}"

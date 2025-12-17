@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# Requires: rename
-
-find . -depth -name "* *" -execdir rename -v 's/ /_/g' "{}" \;
