@@ -49,4 +49,3 @@ if __name__ == "__main__":
             section.weight = weights.get(section.name, 1)
         give_feedback(student, grading, files, path)
 
-
