@@ -225,7 +225,7 @@ class Section:
             try:
                 ans = int(ans)
             except ValueError:
-                pass
+                ans = -1
         additional_feedback = (
             input("\tany additional feedback? Leave empty (hit enter) if no: ")
             if self.manual_input

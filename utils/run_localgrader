@@ -63,7 +63,7 @@ declare -a student_files
 
 function get_student_files {
   local student_dir="${1}"
-  mapfile -t -d '' student_files < <(find ${student_dir} -type f -print0)
+  mapfile -t -d '' student_files < <(find ${student_dir} -type f \( -name "*.py" -o -name "*.gif" \) -print0)
   for file in "${student_files[@]}"; do cp "${file}" .; done
 }
 

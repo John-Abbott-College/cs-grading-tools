@@ -36,5 +36,4 @@ if __name__ == "__main__":
     student: Student = get_student_info_from_lea(dirs[-1], due_date)
     grading.days_late = student.days_late
 
-
-    give_feedback(student, grading, files)
+    give_feedback(student, grading, files, path)
