@@ -8,6 +8,9 @@ from jac_cs_grading_tools.feedback_utils import (
 )
 from jac_cs_grading_tools.check_util import errors_and_warnings
 import os
+import sys
+
+files = ["turtle-projectile.py"]
 
 grading = Grading()
 
@@ -30,8 +33,6 @@ def run_manual_tests():
     section_wind = grading.add_section("VI. Wind", 5)
 
     # Coding quality
-    all_errors, all_warnings = errors_and_warnings(files)
-    section_coding_quality.add_result(f"Warnings:\n{all_warnings}", 0)
     section_coding_quality.ask_question_with_partial_grade("Are the variables good?", 5)
     section_coding_quality.ask_question_with_partial_grade(
         "Did you use variable names instead of numbers?", 5

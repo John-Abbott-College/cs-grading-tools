@@ -6,6 +6,7 @@ from jac_cs_grading_tools.feedback_utils import get_student_info_from_lea, give_
 from jac_cs_grading_tools.check_util import errors_and_warnings
 import os
 import re
+import sys
 
 files = ["turtle-projectile.py"]
 due_date = datetime(2025, 10, 22, 1)

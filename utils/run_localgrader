@@ -75,7 +75,7 @@ function autograde {
   local student_dir="${1}"
   echo -n "autograding ${student_dir}..."
   python ${AUTOGRADE_SCRIPT} ${student_dir} || error "Error caught: cleaning student files and exiting."
-  grep score "${student_dir}/results.json" | tail -n 1
+  grep score "${student_dir}/results.json" | tail -n 1 || echo "No score in results.json. Whatever."
 }
 
 function manualgrade {
