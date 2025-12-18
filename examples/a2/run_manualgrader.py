@@ -39,23 +39,23 @@ def run_manual_tests():
     )
     section_wind = grading.add_section("VI. Wind", 5)
 
-    section_coding_quality.ask_question_with_partial_grade("Are the variables good?", 5)
+    section_coding_quality.ask_question_with_partial_grade("Are the variables good?", 3)
     section_coding_quality.ask_question_with_partial_grade(
         "Did you use variable names instead of numbers?", 5
     )
-    section_coding_quality.ask_question_with_partial_grade("No dead code?", 5)
+    section_coding_quality.ask_question_with_partial_grade("No dead code?", 2)
 
     section_background.ask_question_with_partial_grade(
-        "Were the ground and pond rectangles drawn?", 15
+        "Were the ground and pond rectangles drawn?", 5
     )
 
     section_background.ask_question_with_partial_grade(
-        "Were the ground and pond rectangles drawn in the correct spot?", 10
+        "Were the ground and pond rectangles drawn in the correct spot?", 5
     )
 
-    section_background.ask_question_with_partial_grade("Was the wall drawn?", 10)
+    section_background.ask_question_with_partial_grade("Was the wall drawn?", 5)
 
-    section_background.ask_question_with_partial_grade("Was an extra unique shape drawn?", 10)
+    section_background.ask_question_with_partial_grade("Was an extra unique shape drawn?", 5)
 
     print()
     print("***************************")
@@ -66,29 +66,29 @@ def run_manual_tests():
 
     section_initialization.ask_question_with_partial_grade(
         "Did the program ask for angle and velocity",
-        10,
+        5,
     )
 
     section_initialization.ask_question_with_partial_grade(
-        "Angle / Velocity question... was it a good prompt?", 10
+        "Angle / Velocity question... was it a good prompt?", 5
     )
 
-    section_basic_motion.ask_question_with_partial_grade("Does the turtle move?", 35)
+    section_basic_motion.ask_question_with_partial_grade("Does the turtle move?", 10)
 
     section_basic_motion.ask_question_with_partial_grade(
-        "Does the turtle movement look correct", 25
-    )
-
-    section_basic_motion.ask_question_with_partial_grade(
-        "Did the turtle enter the ocean at angle 70, speed 90?", 15
+        "Does the turtle movement look correct", 10
     )
 
     section_basic_motion.ask_question_with_partial_grade(
-        "Does the turtle always 'face' the right direction", 10
+        "Did the turtle enter the ocean at angle 70, speed 90?", 5
     )
 
     section_basic_motion.ask_question_with_partial_grade(
-        "Does the turtle show its path?", 2
+        "Does the turtle always 'face' the right direction", 5
+    )
+
+    section_basic_motion.ask_question_with_partial_grade(
+        "Does the turtle show its path?", 5
     )
 
     # hitting the ground/ocean
@@ -102,42 +102,42 @@ def run_manual_tests():
 
     section_hit_ground.ask_question_with_partial_grade(
         "Using appropriate angle/speed, does the program detect that the turtle hit the ocean?",
-        10,
+        6,
     )
 
     section_hit_ground.ask_question_with_partial_grade(
         "Is the correct message displayed when the turtle hits the ocean?",
-        5,
+        2,
     )
 
     section_hit_ground.ask_question_with_partial_grade(
         "Using angle 20, speed 20, does the program detect that the turtle hit the ground?",
-        10,
+        5,
     )
 
     section_hit_ground.ask_question_with_partial_grade(
         "Using angle 70, speed 100, does the program detect that the turtle hit the ground?",
-        10,
+        5,
     )
 
     section_hit_ground.ask_question_with_partial_grade(
         "Is the correct message displayed when the turtle hits the ground?",
-        5,
+        2,
     )
 
     section_hit_wall.ask_question_with_partial_grade(
         "Using angle 20, speed 200, does program detect that the turtle hit a wall?",
-        5,
+        4,
     )
 
     section_hit_wall.ask_question_with_partial_grade(
         "Using angle 45, speed 70, does program detect that the turtle hit a wall?",
-        10,
+        4,
     )
 
     section_hit_ground.ask_question_with_partial_grade(
         "Is the correct message displayed when the turtle hits the wall?",
-        5,
+        2,
     )
 
 
@@ -149,12 +149,12 @@ def run_manual_tests():
     print()
 
     section_wind.ask_question_with_partial_grade(
-        "Was wind speed used and not acceleration?", 5
+        "Was wind speed used and not acceleration?", 3
     )
 
     section_wind.ask_question_with_partial_grade(
         "If wind is 40, and angle is 180, and turtle is 45/56, does the turtle go up down?",
-        5,
+        2,
     )
 
 
