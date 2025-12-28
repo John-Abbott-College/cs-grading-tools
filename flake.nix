@@ -22,9 +22,9 @@
             zlib
             libglvnd
             libxkbcommon
-            fontconfig
+            fontconfig.dev
             libx11
-            glib
+            glib.dev
             freetype
             zstd
             dbus
