@@ -340,13 +340,13 @@ class InputIterator:
             return next(self.it)
         except StopIteration:
             raise InputException(
-                f"Your program asks for input too many times. "
+                "Your program asks for input too many times. "
                 + f"Please re-read the question, it only asks for {len(self.data)} inputs."
             )
 
     def done(self):
         if self.count < len(self.data):
             raise InputException(
-                f"Your program asks for input too few times.  Please re-read the question, "
+                "Your program asks for input too few times.  Please re-read the question, "
                 + f"it asks for {len(self.data)} inputs."
             )

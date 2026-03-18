@@ -11,12 +11,10 @@
 #  see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
-import fnmatch
 import json
 import os.path
 import subprocess
 import sys
-from typing import Optional
 
 # -------------------------------------------------------------------------
 # VERY IMPORTANT NOTE!!!

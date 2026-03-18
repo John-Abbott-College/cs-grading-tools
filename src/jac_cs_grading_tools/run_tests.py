@@ -8,7 +8,7 @@ def run_tests(this_rubric: Rubric, results: dict[str, UnitTest]) -> Grading:
 
     for section_info in this_rubric:
         skips = []
-        print(f"\n\n", section_info.name)
+        print("\n\n", section_info.name)
         section = grading.add_section(
             section_info.name, section_info.worth, section_info.min_worth
         )

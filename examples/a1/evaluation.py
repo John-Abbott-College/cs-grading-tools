@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 
-from grading import Grading, Section
+from grading import Grading
 from feedback_utils import get_student_info_from_lea, give_feedback, Student
 from check_util import run_top_level_code_return_output
 import os
@@ -283,8 +283,8 @@ def recipe():
 
     # adapt for whether they used input() or not
     is_using_var = section.ask_question(
-        f"Check the student code: do they use a variable? (n if they use input())",
-        f"Using input gives a small bonus grade.",
+        "Check the student code: do they use a variable? (n if they use input())",
+        "Using input gives a small bonus grade.",
         -2,
     )
 
@@ -332,7 +332,7 @@ def recipe():
                         10,
                     )
                     partial_pass = True
-                match = re.search(rf"(^|.*\s)(\d+\..*)(\s|$)", output)
+                match = re.search(r"(^|.*\s)(\d+\..*)(\s|$)", output)
                 if match:
                     print("You cannot buy partial bags of flour!")
                     section.add_result(
@@ -341,7 +341,7 @@ def recipe():
                     partial_pass = True
                 if not partial_pass:
                     section.add_result(
-                        f"Your answer for number of bags of flour is incorrect", 15
+                        "Your answer for number of bags of flour is incorrect", 15
                     )
 
     if passed:

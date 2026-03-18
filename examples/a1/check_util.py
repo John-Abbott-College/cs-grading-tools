@@ -98,14 +98,14 @@ class InputIterator:
             return next(self.it)
         except StopIteration:
             raise InputException(
-                f"Your program asks for input too many times. "
+                "Your program asks for input too many times. "
                 + f"Please re-read the question, it only asks for {len(self.data)} inputs."
             )
 
     def done(self):
         if self.count < len(self.data):
             raise InputException(
-                f"Your program asks for input too few times.  Please re-read the question, "
+                "Your program asks for input too few times.  Please re-read the question, "
                 + f"it asks for {len(self.data)} inputs."
             )
 
@@ -185,7 +185,7 @@ def ensure_no_top_level_io(m: str):
     sys.stdout = StringIO()
     try:
         module = __import__(m)
-    except EOFError as e:
+    except EOFError:
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
         raise TopLevelCodeIOException(

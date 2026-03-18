@@ -1,6 +1,5 @@
 import unittest
 from gradescope_utils.autograder_utils.json_test_runner import JSONTestRunner
-import socket
 import os
 import sys
 

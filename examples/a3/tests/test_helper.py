@@ -1,6 +1,5 @@
 import ast
 import inspect
-import typing
 from inspect import Signature
 from modulefinder import Module
 from types import ModuleType

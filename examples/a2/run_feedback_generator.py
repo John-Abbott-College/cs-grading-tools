@@ -1,15 +1,12 @@
-import math
 from datetime import datetime
 
-from jac_cs_grading_tools.grading import Grading, Section
+from jac_cs_grading_tools.grading import Grading
 from jac_cs_grading_tools.feedback_utils import (
     get_student_info_from_lea,
     give_feedback,
     Student,
 )
-from jac_cs_grading_tools.check_util import errors_and_warnings
 import os
-import re
 import sys
 
 files = ["turtle-projectile.py"]
