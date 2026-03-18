@@ -17,8 +17,17 @@ if __name__ == "__main__":
         sys.exit(1)
 
     results_file = f"{path}results.json"
-    args = ["python", "-m", 'pytest', "--json-report", "--json-report-indent=2",
-            f"--json-report-file={results_file}", "--json-report-omit", "keywords", "summary", "collectors"]
+    args = [
+        "python",
+        "-m",
+        "pytest",
+        "--json-report",
+        "--json-report-indent=2",
+        f"--json-report-file={results_file}",
+        "--json-report-omit",
+        "keywords",
+        "summary",
+        "collectors",
+    ]
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
-

@@ -2,7 +2,11 @@ import math
 from datetime import datetime
 
 from jac_cs_grading_tools.grading import Grading, Section
-from jac_cs_grading_tools.feedback_utils import get_student_info_from_lea, give_feedback, Student
+from jac_cs_grading_tools.feedback_utils import (
+    get_student_info_from_lea,
+    give_feedback,
+    Student,
+)
 from jac_cs_grading_tools.check_util import errors_and_warnings
 import os
 import re
@@ -28,9 +32,10 @@ if __name__ == "__main__":
     manual_grading_answers = f"{path}test_answers.txt"
 
     if not os.path.exists(manual_grading_answers):
-        print("This student hasn't been graded yet -- no feedback or rubric can be generated")
+        print(
+            "This student hasn't been graded yet -- no feedback or rubric can be generated"
+        )
         sys.exit()
-
 
     grading = Grading.de_serialize(manual_grading_answers)
     student: Student = get_student_info_from_lea(dirs[-1], due_date)

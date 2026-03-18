@@ -11,9 +11,9 @@ class Grading:
         self.days_late = 0
         self.penalty_per_day = 0.10
         self.rubric = dict()
-        self.manual_input=manual_input
+        self.manual_input = manual_input
 
-    def add_section(self, name: str, max_grade: float, min_grade:float=0) -> Section:
+    def add_section(self, name: str, max_grade: float, min_grade: float = 0) -> Section:
         """
         add a section to the grading scheme
         :param name: name of the section
@@ -103,9 +103,16 @@ class Section:
     :param max_grade: the default grade if no deductions
     :param min_grade: the minimum grade for this section
     """
+
     separator = "|"
 
-    def __init__(self, name: str, max_grade: float, min_grade: float = 0, manual_input: bool = True):
+    def __init__(
+        self,
+        name: str,
+        max_grade: float,
+        min_grade: float = 0,
+        manual_input: bool = True,
+    ):
         self.deductions: list[Deductions] = []
         self.name = name.replace(Section.separator, " ")
         self.max_grade = max_grade
@@ -151,7 +158,9 @@ class Section:
             self.deductions.append(Deductions(grade, question + ": " + response))
         return ans
 
-    def ask_question_with_partial_grade(self, question: str, grade: float, ans: int =-1, response_ans: str = ""):
+    def ask_question_with_partial_grade(
+        self, question: str, grade: float, ans: int = -1, response_ans: str = ""
+    ):
         """
         ask the teacher to choose a 5-point scale grade for a question
         :param question:
@@ -159,10 +168,11 @@ class Section:
         :param ans: the 0-5 point "answer" for the partial grade (default -1, outside of range of possible values)
         :param response_ans: the 5-point scale text explanation
         """
-        result, response = self._determine_partial_grade(question=question, grade=grade, ans=ans, response_ans=response_ans)
+        result, response = self._determine_partial_grade(
+            question=question, grade=grade, ans=ans, response_ans=response_ans
+        )
         deduction = abs(result - grade)
         self.deductions.append(Deductions(deduction, response))
-
 
     def add_result(self, response, grade: float):
         """
@@ -173,7 +183,9 @@ class Section:
         response = response.replace("\n", "<br>")
         self.deductions.append(Deductions(grade, response))
 
-    def add_result_with_partial_grade(self, question, score, max_score, output, ans=-1, response_ans=""):
+    def add_result_with_partial_grade(
+        self, question, score, max_score, output, ans=-1, response_ans=""
+    ):
         """
         add a grade to the grading rubric, with possibility for part marks (useful for unit tests)
         :param question:
@@ -184,9 +196,15 @@ class Section:
         :param response_ans: the 5-point scale text explanation
         """
         if score != max_score:
-            result, response = self._determine_partial_grade(question.replace(":",""), max_score, output=output, ans=ans, response_ans=response_ans)
+            result, response = self._determine_partial_grade(
+                question.replace(":", ""),
+                max_score,
+                output=output,
+                ans=ans,
+                response_ans=response_ans,
+            )
         else:
-            result, response = score, f"{output.replace(":","")}"
+            result, response = score, f"{output.replace(':', '')}"
         deduction = abs(result - max_score)
         self.deductions.append(Deductions(deduction, response))
 
@@ -215,10 +233,14 @@ class Section:
             + "\n".join(f"{section_info}:{str(d)}" for d in self.deductions)
         )
 
-    def _determine_partial_grade(self, question, grade, output="", ans=-1, response_ans="") -> tuple(float, str):
+    def _determine_partial_grade(
+        self, question, grade, output="", ans=-1, response_ans=""
+    ) -> tuple(float, str):
         while ans < 0 or ans > 5:
             ans = (
-                input(f"\n{question}\n\t{output}\n\tAssign grade on 5 point scale (5 is perfect, 0 is not at all, etc): ")
+                input(
+                    f"\n{question}\n\t{output}\n\tAssign grade on 5 point scale (5 is perfect, 0 is not at all, etc): "
+                )
                 if self.manual_input
                 else 0
             )
@@ -237,7 +259,7 @@ class Section:
             2: "attempted with major issues",
             3: "reasonable attempt with some issues",
             4: "good, with 1 or more small mistakes",
-            5: "no issues"
+            5: "no issues",
         }
         result = (ans / 5) * grade
         if response_ans == "":

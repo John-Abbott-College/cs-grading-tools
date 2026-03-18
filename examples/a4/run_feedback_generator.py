@@ -1,7 +1,11 @@
 from datetime import datetime
 
 from jac_cs_grading_tools.grading import Grading
-from jac_cs_grading_tools.feedback_utils import get_student_info_from_lea, give_feedback, Student
+from jac_cs_grading_tools.feedback_utils import (
+    get_student_info_from_lea,
+    give_feedback,
+    Student,
+)
 import os
 import sys
 import json
@@ -28,7 +32,9 @@ if __name__ == "__main__":
     true_rubric_file = "rubric.json"
 
     if not os.path.exists(manual_grading_answers):
-        print("This student hasn't been graded yet -- no feedback or rubric can be generated")
+        print(
+            "This student hasn't been graded yet -- no feedback or rubric can be generated"
+        )
         sys.exit()
 
     grading = Grading.de_serialize(manual_grading_answers)
@@ -48,4 +54,3 @@ if __name__ == "__main__":
         for section in grading.sections:
             section.weight = weights.get(section.name, 1)
         give_feedback(student, grading, files, path)
-

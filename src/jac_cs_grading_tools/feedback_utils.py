@@ -85,9 +85,11 @@ def give_feedback(
 # print
 # =============================================================================
 
+
 def print_grades(student: Student, evaluation: Grading, file: TextIO = sys.stdout):
     final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
     file.write(f"{student.name},{student.id},{final_grade},See LEA for feedback.")
+
 
 def print_evaluation(
     student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
@@ -122,11 +124,17 @@ def print_evaluation(
     for section in evaluation.sections:
         file.write(
             formatter.section_header(
-                name=section.name, score=section.grade()*section.weight, max_grade=section.max_grade*section.weight
+                name=section.name,
+                score=section.grade() * section.weight,
+                max_grade=section.max_grade * section.weight,
             )
         )
         for d in section.deductions:
-            file.write(formatter.deduction(feedback=d.feedback, deduction=d.deduction*section.weight))
+            file.write(
+                formatter.deduction(
+                    feedback=d.feedback, deduction=d.deduction * section.weight
+                )
+            )
 
     # print student code
     file.write("\n")

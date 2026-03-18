@@ -28,6 +28,7 @@ def clear_data():
     t.DATA_COLUMN_MAX_TEMPS.clear()
     t.DATA_COLUMN_MIN_TEMPS.clear()
 
+
 @pytest.fixture()
 def index_and_temps_for_date():
     # -73.74,45.47,MONTREAL INTL A,7025251,2014-02-14,2014,2,14,,-2.2,,-6.1,,-4.2,,22.2,,0,,0,,12.4,,12.4,,18,,1,,67,
@@ -41,6 +42,7 @@ def index_and_temps_for_date():
                 return count, float(line[MAX_TEMP]), float(line[MIN_TEMP])
             count += 1
     return 0, 0, 0
+
 
 def test_read_airport_temperatures_return_type():
     sig = inspect.signature(t.__getattribute__("read_airport_temperatures"))
@@ -111,8 +113,9 @@ def test_read_temperature_file_uses_filename_parameter():
 
 def test_read_temperature_file_lists_same_size():
     t.read_airport_temperatures(test_filename)
-    assert len(t.DATA_COLUMN_MIN_TEMPS) == len(t.DATA_COLUMN_YEARS) and len(t.DATA_COLUMN_YEARS) == len(
-        t.DATA_COLUMN_MAX_TEMPS)
+    assert len(t.DATA_COLUMN_MIN_TEMPS) == len(t.DATA_COLUMN_YEARS) and len(
+        t.DATA_COLUMN_YEARS
+    ) == len(t.DATA_COLUMN_MAX_TEMPS)
 
 
 def test_read_temperature_file_lists_correct_size():
@@ -157,4 +160,3 @@ def test_get_extreme_temperature_count_above_no_hard_coding():
     t.read_airport_temperatures(test_filename)
     n = t.get_extreme_temperature_count(2004, t.HIGH_THRESHOLD - 10, False)
     assert 142 <= n <= 144
-

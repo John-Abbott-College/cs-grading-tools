@@ -12,7 +12,7 @@ from test_helper import (
     contains_func,
     uses_condition,
     hex_area,
-    actual_net_income
+    actual_net_income,
 )
 
 files_to_test = {"func_file": "my_functions.py", "main_file": "assignment3.py"}
@@ -110,6 +110,7 @@ class TestFuncSig(unittest.TestCase):
             self.fail(f"Unknown error{e}")
         print("Good job! All functions have the correct number of parameters")
 
+
 class TestQ1Evaluator(unittest.TestCase):
     def setUp(self):
         try:
@@ -183,7 +184,7 @@ class TestQ1Evaluator(unittest.TestCase):
                 places=FLOAT_PRECISION_TOL,
                 msg=f"Mistake in the actual income calculation, for hourly_salary={hourly_rate}, "
                 f"hours_per_week={hours_per_week}. Expected net income {expected_net_income:.2f}, "
-                f"but got: {actual_net_income:.2f}"
+                f"but got: {actual_net_income:.2f}",
             )
         except Exception as e:
             self.fail(f"{e}. NOTE: missing the bonus will not lower your grade.")
@@ -198,15 +199,16 @@ class TestQ1Evaluator(unittest.TestCase):
             for gross_income, tax_rate in zip(self.income_brackets, self.tax_rates):
                 expected_income = (gross_income - 10) * (1 - tax_rate)
                 calculated_income = self.student_code.net_income(
-                    hourly_rate= (gross_income - 10) / total_hours, hours_per_week=weekly_hours
+                    hourly_rate=(gross_income - 10) / total_hours,
+                    hours_per_week=weekly_hours,
                 )
                 self.assertAlmostEqual(
                     expected_income,
                     calculated_income,
                     places=6,
                     msg=f"For a gross salary of {gross_income:.2f}, "
-                        f"expected a net salary of {expected_income:.2f}, "
-                        f"but got {calculated_income:.2f}"
+                    f"expected a net salary of {expected_income:.2f}, "
+                    f"but got {calculated_income:.2f}",
                 )
 
         except Exception as e:
@@ -220,16 +222,18 @@ class TestQ1Evaluator(unittest.TestCase):
             weekly_hours = 40
             total_hours = weekly_hours * self.weeks_per_year
             for gross_income, tax_rate in zip(self.income_brackets, self.tax_rates):
-                hourly_rate= (gross_income-10) / total_hours
+                hourly_rate = (gross_income - 10) / total_hours
                 expected_income = actual_net_income(hourly_rate, weekly_hours)
-                calculated_income = self.student_code.actual_net_income(hourly_rate, weekly_hours)
+                calculated_income = self.student_code.actual_net_income(
+                    hourly_rate, weekly_hours
+                )
                 self.assertAlmostEqual(
                     expected_income,
                     calculated_income,
                     places=6,
                     msg=f"For a gross salary of {gross_income:.2f}, "
-                        f"I expect a net salary of {expected_income:.2f}, "
-                        f"but got {calculated_income:.2f}"
+                    f"I expect a net salary of {expected_income:.2f}, "
+                    f"but got {calculated_income:.2f}",
                 )
         except Exception as e:
             self.fail(f"{e}. NOTE: missing the bonus will not lower your grade.")
@@ -309,9 +313,7 @@ class TestQ2Evaluator(unittest.TestCase):
             self.fail(a)
         except TypeError as e:
             self.fail(e)
-        print(
-            "Great, used necessary concepts to determine the intake frequency"
-        )
+        print("Great, used necessary concepts to determine the intake frequency")
 
     @weight(1)
     def test_call_intake_frequency(self):
@@ -457,8 +459,7 @@ class TestQ4Evaluator(unittest.TestCase):
                 a0 + w * i for i in range(first_green_idx, num_hex, space_between_green)
             ]
             areas_green = [
-                hex_area(a_green) - hex_area(a_green - w)
-                for a_green in green_sides
+                hex_area(a_green) - hex_area(a_green - w) for a_green in green_sides
             ]
             expected_total_area = sum(areas_green)
             actual_area = self.student_code.green_area(num_hex, a0, w)
@@ -490,8 +491,7 @@ class TestQ4Evaluator(unittest.TestCase):
                     for i in range(first_green_idx, num_hex, space_between_green)
                 ]
                 areas_green = [
-                    hex_area(a_green) - hex_area(a_green - w)
-                    for a_green in green_sides
+                    hex_area(a_green) - hex_area(a_green - w) for a_green in green_sides
                 ]
                 expected_total_area = sum(areas_green)
                 actual_area = self.student_code.green_area(num_hex, a0, w)

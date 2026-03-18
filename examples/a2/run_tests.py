@@ -20,4 +20,3 @@ if __name__ == "__main__":
 
     print(f"{path}")
     Path(f"{path}results.json").touch()
-

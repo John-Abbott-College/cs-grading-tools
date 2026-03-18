@@ -20,8 +20,10 @@ def qw(s: str) -> list[str]:
     return s.split(" ")
 
 
-files = qw("question_1_fix_me.py question_2_formatting.py question_3_toy_packing_plant.py "
-           "question_4_tariffs.py question_5_recipe.py")
+files = qw(
+    "question_1_fix_me.py question_2_formatting.py question_3_toy_packing_plant.py "
+    "question_4_tariffs.py question_5_recipe.py"
+)
 
 grading = Grading()
 
@@ -51,21 +53,35 @@ def fix_me():
     print_student_output(outputs)
 
     # part 1
-    section.ask_question("Did they print 9? (y/n)", "You did not add the two numbers", 1)
+    section.ask_question(
+        "Did they print 9? (y/n)", "You did not add the two numbers", 1
+    )
     # part 2
-    section.ask_question("Did they print 11? (y/n)", "You did not add the two numbers", 1)
+    section.ask_question(
+        "Did they print 11? (y/n)", "You did not add the two numbers", 1
+    )
     # part 3
-    section.ask_question("Did it run without crashing? (y/n)", "Your program is still crashing for part 3", 2)
+    section.ask_question(
+        "Did it run without crashing? (y/n)",
+        "Your program is still crashing for part 3",
+        2,
+    )
     # part 4
-    section.ask_question("Was the square root of 2 printed (y/n)",
-                         "You did not print correct value for the square root of 2",
-                         1)
+    section.ask_question(
+        "Was the square root of 2 printed (y/n)",
+        "You did not print correct value for the square root of 2",
+        1,
+    )
     # part 5
-    section.ask_question("Was the pi printed to two decimal places (y/n)",
-                         "pi was not written to two decimal points",
-                         1)
+    section.ask_question(
+        "Was the pi printed to two decimal places (y/n)",
+        "pi was not written to two decimal points",
+        1,
+    )
 
-    section.ask_question_with_feedback_and_custom_grade("Met requirements without needing code change?")
+    section.ask_question_with_feedback_and_custom_grade(
+        "Met requirements without needing code change?"
+    )
 
 
 # ===============================================================================
@@ -94,7 +110,9 @@ def line_up_numbers():
             section.add_result(f"`{output}` is not a number :(", 2)
             break
 
-    section.ask_question_with_feedback_and_custom_grade("Met requirements without needing code change?")
+    section.ask_question_with_feedback_and_custom_grade(
+        "Met requirements without needing code change?"
+    )
 
 
 def decimal_point_line_up(filename):
@@ -102,7 +120,11 @@ def decimal_point_line_up(filename):
     pos = output[0].find(".")
     for line in output:
         if line.find(".") != pos:
-            return False, f"The decimals in your output do not line up. <br>Output: {output}<br>", output
+            return (
+                False,
+                f"The decimals in your output do not line up. <br>Output: {output}<br>",
+                output,
+            )
     return True, "", output
 
 
@@ -135,7 +157,9 @@ def packing_up():
         did_pass = True
 
     elif number is not None and number == 5:
-        section.add_result("You did not add the boxes that I boxed up during my shift", 10)
+        section.add_result(
+            "You did not add the boxes that I boxed up during my shift", 10
+        )
 
     elif number is not None and number <= 26:
         section.add_result("You forgot to add the initial number of full boxes", 5)
@@ -144,7 +168,9 @@ def packing_up():
         section.add_result("You're calculation is off, the answer should be 31", 5)
 
     elif number is not None and number == 30:
-        section.add_result("You did not account for the toys that were in a partially filled box", 7)
+        section.add_result(
+            "You did not account for the toys that were in a partially filled box", 7
+        )
 
     else:
         section.add_result("Your calculation is not correct", 15)
@@ -153,7 +179,9 @@ def packing_up():
     if did_pass:
         print()
         print("Running with toys to pack is 10")
-        outputs = run_top_level_code_return_output(files[2], lambda x: x.replace("337", "10"))
+        outputs = run_top_level_code_return_output(
+            files[2], lambda x: x.replace("337", "10")
+        )
         print_student_output(outputs)
 
         match = re.search(r"^.*(\d+)", outputs[-1])
@@ -165,12 +193,14 @@ def packing_up():
             print("passed")
 
         else:
-            section.add_result("You did not account for the toys that were in a partially filled box",
-                               10)
+            section.add_result(
+                "You did not account for the toys that were in a partially filled box",
+                10,
+            )
 
-    section.ask_question_with_feedback_and_custom_grade("Met requirements without needing code change?")
-
-
+    section.ask_question_with_feedback_and_custom_grade(
+        "Met requirements without needing code change?"
+    )
 
 
 # ===============================================================================
@@ -197,15 +227,28 @@ def tariffs():
     outputs = run_top_level_code_return_output(files[3])
     print_student_output(outputs)
 
-    section.ask_question("Is there output?", "You need to print your answer, or give an indication what the numbers represent", 5)
-    ans2 = section.ask_question(f"Is the price before tariffs {store_price_no_tariffs}?",
-                                f"The price before tariffs should be {store_price_no_tariffs:.2f}: your gave... ", 5)
-    ans1 = section.ask_question(f"Is the price after tariffs {store_price_with_tariffs:.2f}?",
-                                f"The price before tariffs should be {store_price_with_tariffs:.2f}: your gave... ", 5)
+    section.ask_question(
+        "Is there output?",
+        "You need to print your answer, or give an indication what the numbers represent",
+        5,
+    )
+    ans2 = section.ask_question(
+        f"Is the price before tariffs {store_price_no_tariffs}?",
+        f"The price before tariffs should be {store_price_no_tariffs:.2f}: your gave... ",
+        5,
+    )
+    ans1 = section.ask_question(
+        f"Is the price after tariffs {store_price_with_tariffs:.2f}?",
+        f"The price before tariffs should be {store_price_with_tariffs:.2f}: your gave... ",
+        5,
+    )
     if ans1 == "y" and ans2 == "y":
-        section.ask_question(f"Is the difference in price {store_price_with_tariffs - store_price_no_tariffs:.2f}?",
-                             f"The price after tariffs should be {store_price_with_tariffs - store_price_no_tariffs}: "
-                             "your gave... ", 5)
+        section.ask_question(
+            f"Is the difference in price {store_price_with_tariffs - store_price_no_tariffs:.2f}?",
+            f"The price after tariffs should be {store_price_with_tariffs - store_price_no_tariffs}: "
+            "your gave... ",
+            5,
+        )
 
     store_price = 450
     wholesaler_price = store_price / 1.20
@@ -213,12 +256,17 @@ def tariffs():
     wholesaler_price = farmer_price * 1.25 * 1.15
     store_price_after_tariff = wholesaler_price * 1.20
 
-    section.ask_question(f"Is the increase of grocery price {store_price_after_tariff - store_price:.2f}?",
-                         f"The increase of grocery prices should be {store_price_after_tariff - store_price:.2f}: "
-                         "you need to figure out the original farmer's price before recalculating your grocery bill.",
-                         3)
+    section.ask_question(
+        f"Is the increase of grocery price {store_price_after_tariff - store_price:.2f}?",
+        f"The increase of grocery prices should be {store_price_after_tariff - store_price:.2f}: "
+        "you need to figure out the original farmer's price before recalculating your grocery bill.",
+        3,
+    )
 
-    section.ask_question_with_feedback_and_custom_grade("Met requirements without needing code change?")
+    section.ask_question_with_feedback_and_custom_grade(
+        "Met requirements without needing code change?"
+    )
+
 
 # ===============================================================================
 # Section V
@@ -234,8 +282,11 @@ def recipe():
     flour_per_cake = 355
 
     # adapt for whether they used input() or not
-    is_using_var = section.ask_question(f"Check the student code: do they use a variable? (n if they use input())",
-                                f"Using input gives a small bonus grade.", -2)
+    is_using_var = section.ask_question(
+        f"Check the student code: do they use a variable? (n if they use input())",
+        f"Using input gives a small bonus grade.",
+        -2,
+    )
 
     # did they print the word flour??
     flour = False
@@ -245,15 +296,17 @@ def recipe():
     for line in map(str.rstrip, outputs):
         flour = flour or "flour" in line.lower()
     if not flour:
-        section.add_result("You did not print how much flour was needed!",
-                           5)
+        section.add_result("You did not print how much flour was needed!", 5)
         print("Did not print how much flour was needed")
 
     # answer this question just in case you had to fix their code to get the other stuff
     # to work
-    section.ask_question("Did they print the word 'flour'",
-                         "Writing numbers without descriptions is not a useful "
-                         "program, because how do I know what I need to buy at the grocery store?", 5)
+    section.ask_question(
+        "Did they print the word 'flour'",
+        "Writing numbers without descriptions is not a useful "
+        "program, because how do I know what I need to buy at the grocery store?",
+        5,
+    )
 
     # the correct answer for 150 cakes
     passed = True
@@ -274,23 +327,35 @@ def recipe():
                 match = re.search(rf"(^|.*\s){answer}(\s|$)", output)
                 if match:
                     print("You did NOT round up")
-                    section.add_result("You have to round up or you will not have enough ingredients", 10)
+                    section.add_result(
+                        "You have to round up or you will not have enough ingredients",
+                        10,
+                    )
                     partial_pass = True
                 match = re.search(rf"(^|.*\s)(\d+\..*)(\s|$)", output)
                 if match:
                     print("You cannot buy partial bags of flour!")
-                    section.add_result(f"You cannot buy partial bags of flour {match.group(2)}", 10)
+                    section.add_result(
+                        f"You cannot buy partial bags of flour {match.group(2)}", 10
+                    )
                     partial_pass = True
                 if not partial_pass:
-                    section.add_result(f"Your answer for number of bags of flour is incorrect", 15)
+                    section.add_result(
+                        f"Your answer for number of bags of flour is incorrect", 15
+                    )
 
     if passed:
         number_of_cakes_to_bake = 5000
-        outputs = run_top_level_code_return_output(files[4],
-                                                   lambda x: x.replace("number_of_cakes_to_bake = 150",
-                                                                       "number_of_cakes_to_bake = 5000"),
-                                                   inputs=["5000"])
-        print("Exact number of bags needs to be purchased: bake 500 cakes, 71 bags flour needed")
+        outputs = run_top_level_code_return_output(
+            files[4],
+            lambda x: x.replace(
+                "number_of_cakes_to_bake = 150", "number_of_cakes_to_bake = 5000"
+            ),
+            inputs=["5000"],
+        )
+        print(
+            "Exact number of bags needs to be purchased: bake 500 cakes, 71 bags flour needed"
+        )
         print_student_output(outputs)
         answer = math.ceil(number_of_cakes_to_bake * flour_per_cake / flour_container)
         for output in map(str.strip, outputs):
@@ -298,18 +363,23 @@ def recipe():
                 match = re.search(rf"(^|.*\s){answer}(\s|$)", output)
                 if not match:
                     section.add_result(
-                                                "For 5000 cakes, you should need exactly 71 "
-                                                f"bags, but instead you have '{output}'", 5)
+                        "For 5000 cakes, you should need exactly 71 "
+                        f"bags, but instead you have '{output}'",
+                        5,
+                    )
                     print("Failed for 5000 cakes")
                 else:
                     print("Passed for 5000 cakes")
                 break
 
         number_of_cakes_to_bake = 2
-        outputs = run_top_level_code_return_output(files[4],
-                                                   lambda x: x.replace("number_of_cakes_to_bake = 150",
-                                                                       "number_of_cakes_to_bake = 2"),
-                                                   inputs=["2"])
+        outputs = run_top_level_code_return_output(
+            files[4],
+            lambda x: x.replace(
+                "number_of_cakes_to_bake = 150", "number_of_cakes_to_bake = 2"
+            ),
+            inputs=["2"],
+        )
         print("Small number of cakes to bake: bake 2 cakes, 1 bags flour needed")
         print_student_output(outputs)
         answer = math.ceil(number_of_cakes_to_bake * flour_per_cake / flour_container)
@@ -318,14 +388,18 @@ def recipe():
                 match = re.search(rf"(^|.*\s){answer}(\s|$)", output)
                 if not match:
                     section.add_result(
-                                                "For 2 cakes, you should need 1 "
-                                                f"bag, but instead you have '{output}'", 5)
+                        "For 2 cakes, you should need 1 "
+                        f"bag, but instead you have '{output}'",
+                        5,
+                    )
                     print("Failed for 2 cakes")
                 else:
                     print("Passed for 2 cakes")
                 break
 
-    section.ask_question_with_feedback_and_custom_grade("Met requirements without needing code change?")
+    section.ask_question_with_feedback_and_custom_grade(
+        "Met requirements without needing code change?"
+    )
 
 
 # ===============================================================================

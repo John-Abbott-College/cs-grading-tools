@@ -57,7 +57,6 @@ class Section:
             self.deductions.append(Deductions(grade, question + ": " + response))
         return ans
 
-
     def ask_question_with_feedback_and_custom_grade(self, question) -> str:
         ans = input(question + " ")
         if ans.strip() != "y":
@@ -79,7 +78,6 @@ class Section:
 
     def clear_deductions(self):
         self.deductions.clear()
-
 
 
 @dataclass

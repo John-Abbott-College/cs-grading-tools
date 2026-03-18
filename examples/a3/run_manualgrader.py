@@ -1,10 +1,10 @@
-
 from jac_cs_grading_tools.grading import Grading
 import os
 import sys
 import json
 
 grading = Grading()
+
 
 def run_manual_tests(autograding_answers):
     section_docstrings = grading.add_section("Docstrings", 1)
@@ -13,16 +13,24 @@ def run_manual_tests(autograding_answers):
     section_well_tested = grading.add_section("assignment3.py file used correctly", 1)
 
     # Docstrings filled in
-    section_docstrings.ask_question_with_partial_grade("docstring file descriptions are completed on each file", 1)
+    section_docstrings.ask_question_with_partial_grade(
+        "docstring file descriptions are completed on each file", 1
+    )
 
     # Edits required
-    section_edits_required.ask_question_with_partial_grade("no major edits required to get the code to work properly", 1)
+    section_edits_required.ask_question_with_partial_grade(
+        "no major edits required to get the code to work properly", 1
+    )
 
     # Coding quality
-    section_coding_quality.ask_question_with_partial_grade("variables used appropriately", 1)
+    section_coding_quality.ask_question_with_partial_grade(
+        "variables used appropriately", 1
+    )
 
     # assignment3.py
-    section_well_tested.ask_question_with_partial_grade("assignment3.py used to test the my_functions.py functions", 1)
+    section_well_tested.ask_question_with_partial_grade(
+        "assignment3.py used to test the my_functions.py functions", 1
+    )
 
     # Put autograded results in Grading object
     with open(autograding_answers, mode="r") as f:
@@ -31,7 +39,7 @@ def run_manual_tests(autograding_answers):
     for test in autograder_results["tests"]:
         test_section = grading.add_section(test["name"], 1)
         test_section.add_result_with_partial_grade(
-            test.get("name"), test["score"], test["max_score"], test.get("output","")
+            test.get("name"), test["score"], test["max_score"], test.get("output", "")
         )
 
 

@@ -57,17 +57,19 @@ def hex_area(a):
     """Helper to avoid repeating code"""
     return (3 / 2) * math.sqrt(3) * (a**2)
 
+
 WEEKS_PER_YEAR: int = 52
 CONCENTRATION_THRESHOLD = 0.05
 
-TAX_BRACKET_LOW=53_255
-TAX_BRACKET_MED=106_495
-TAX_BRACKET_HIGH=129_590
+TAX_BRACKET_LOW = 53_255
+TAX_BRACKET_MED = 106_495
+TAX_BRACKET_HIGH = 129_590
 
-TAX_RATE_LOW=0.14
-TAX_RATE_MED=0.19
-TAX_RATE_HIGH=0.24
-TAX_RATE_ULTRA=0.2575
+TAX_RATE_LOW = 0.14
+TAX_RATE_MED = 0.19
+TAX_RATE_HIGH = 0.24
+TAX_RATE_ULTRA = 0.2575
+
 
 def net_income(hourly_rate, hours_per_week):
     gross_income = hourly_rate * hours_per_week * WEEKS_PER_YEAR
@@ -79,25 +81,32 @@ def net_income(hourly_rate, hours_per_week):
         tax_rate = TAX_RATE_HIGH
     else:
         tax_rate = TAX_RATE_ULTRA
-    return gross_income*(1-tax_rate)
+    return gross_income * (1 - tax_rate)
 
-def actual_net_income(hourly_rate:float, hours_per_week:float)->float:
+
+def actual_net_income(hourly_rate: float, hours_per_week: float) -> float:
     """Function calculating the actual salary of a Quebec resident"""
     taxable_gross_income = hourly_rate * hours_per_week * WEEKS_PER_YEAR
     accumulated_net_income = 0
     if taxable_gross_income > TAX_BRACKET_HIGH:
         tax_rate = TAX_RATE_ULTRA
-        accumulated_net_income += (taxable_gross_income-TAX_BRACKET_HIGH)*(1-tax_rate)
+        accumulated_net_income += (taxable_gross_income - TAX_BRACKET_HIGH) * (
+            1 - tax_rate
+        )
         taxable_gross_income = TAX_BRACKET_HIGH
     if taxable_gross_income > TAX_BRACKET_MED:
         tax_rate = TAX_RATE_HIGH
-        accumulated_net_income += (taxable_gross_income-TAX_BRACKET_MED)*(1-tax_rate)
+        accumulated_net_income += (taxable_gross_income - TAX_BRACKET_MED) * (
+            1 - tax_rate
+        )
         taxable_gross_income = TAX_BRACKET_MED
     if taxable_gross_income > TAX_BRACKET_LOW:
         tax_rate = TAX_RATE_MED
-        accumulated_net_income += (taxable_gross_income-TAX_BRACKET_LOW)*(1-tax_rate)
+        accumulated_net_income += (taxable_gross_income - TAX_BRACKET_LOW) * (
+            1 - tax_rate
+        )
         taxable_gross_income = TAX_BRACKET_LOW
     if taxable_gross_income <= TAX_BRACKET_LOW:
         tax_rate = TAX_RATE_LOW
-        accumulated_net_income += (taxable_gross_income)*(1-tax_rate)
+        accumulated_net_income += (taxable_gross_income) * (1 - tax_rate)
     return accumulated_net_income

@@ -12,7 +12,7 @@ OUTPUT_COMMENTS: list[tuple[range, str]] = [
     (range(80, 90), "Great!"),
     (range(70, 80), "Good!"),
     (range(60, 70), "Good."),
-    (range(0, 60), "See me and we can go over this assignment.")
+    (range(0, 60), "See me and we can go over this assignment."),
 ]
 
 
@@ -24,8 +24,9 @@ class Student:
     days_late: float
 
 
-def get_student_info_from_lea(folder_name: str,
-                              due_date: Optional[datetime] = None) -> Student:
+def get_student_info_from_lea(
+    folder_name: str, due_date: Optional[datetime] = None
+) -> Student:
     """
     parse student folder name from LEA to create
     :param due_date: date the assignment was due
@@ -37,7 +38,7 @@ def get_student_info_from_lea(folder_name: str,
         student_name: str = match.groups()[0]
         submitted_str = match.groups()[2]
         try:
-            submitted: datetime = datetime.strptime(submitted_str, '%Y-%m-%d_%Hh%Mm%Ss')
+            submitted: datetime = datetime.strptime(submitted_str, "%Y-%m-%d_%Hh%Mm%Ss")
         except ValueError:
             submitted: datetime = datetime(2000, 1, 0, 1)
     else:
@@ -49,13 +50,16 @@ def get_student_info_from_lea(folder_name: str,
         days_late = late.days + late.seconds / (24 * 60 * 60)
         days_late = days_late if days_late > 0 else 0
 
-    student = Student(id=student_id, name=student_name,
-                      submission_date=submitted, days_late=days_late)
+    student = Student(
+        id=student_id, name=student_name, submission_date=submitted, days_late=days_late
+    )
     return student
 
 
 # ----------------------------------------------------------------------------------------
-def give_feedback(student: Student, evaluation: Grading, source_files: list[str] = None):
+def give_feedback(
+    student: Student, evaluation: Grading, source_files: list[str] = None
+):
     feedback_file = f"{student.id}_{student.name}"
     feedback_file += ".md"
 
@@ -68,7 +72,10 @@ def give_feedback(student: Student, evaluation: Grading, source_files: list[str]
 # print
 # =============================================================================
 
-def print_evaluation(student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None):
+
+def print_evaluation(
+    student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
+):
     if source_files is None:
         source_files = []
 
@@ -83,13 +90,21 @@ def print_evaluation(student: Student, evaluation: Grading, file: TextIO = sys.s
             break
 
     file.write(formatter.header())
-    file.write(formatter.title(title=evaluation.title, score=grade, weight=evaluation.out_of()))
-    file.write(formatter.student_info(student=student, evaluation=evaluation, comment=comment))
+    file.write(
+        formatter.title(title=evaluation.title, score=grade, weight=evaluation.out_of())
+    )
+    file.write(
+        formatter.student_info(student=student, evaluation=evaluation, comment=comment)
+    )
 
     # print sections and deductions
     file.write(formatter.result_header())
     for section in evaluation.sections:
-        file.write(formatter.section_header(name=section.name, score=section.grade(), weight=section.weight))
+        file.write(
+            formatter.section_header(
+                name=section.name, score=section.grade(), weight=section.weight
+            )
+        )
         for d in section.deductions:
             file.write(formatter.deduction(feedback=d.feedback, weight=d.deduction))
 
@@ -145,7 +160,7 @@ class MarkDownFormat:
         if weight > 0:
             return f"  * [-{weight}]  {feedback}  \n"
         else:
-            return f"  * [+{-1*weight}]  {feedback}  \n"
+            return f"  * [+{-1 * weight}]  {feedback}  \n"
 
     @staticmethod
     def result_header() -> str:

@@ -14,8 +14,8 @@ files = ["turtle-projectile.py"]
 
 grading = Grading()
 
-def run_manual_tests():
 
+def run_manual_tests():
     print()
     print("***************************")
     print("******* INSTRUCTION *******")
@@ -55,7 +55,9 @@ def run_manual_tests():
 
     section_background.ask_question_with_partial_grade("Was the wall drawn?", 5)
 
-    section_background.ask_question_with_partial_grade("Was an extra unique shape drawn?", 5)
+    section_background.ask_question_with_partial_grade(
+        "Was an extra unique shape drawn?", 5
+    )
 
     print()
     print("***************************")
@@ -140,11 +142,12 @@ def run_manual_tests():
         2,
     )
 
-
     print()
     print("***************************")
     print("******* INSTRUCTION *******")
-    print("For wind calculations, use 56 velocity, 45 degree angle, wind 40, direction 180")
+    print(
+        "For wind calculations, use 56 velocity, 45 degree angle, wind 40, direction 180"
+    )
     print("***************************")
     print()
 

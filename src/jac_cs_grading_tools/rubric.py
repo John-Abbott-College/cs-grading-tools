@@ -12,7 +12,8 @@ DEDUCTION_TESTS = 6
 SKIP = 7
 
 
-class RubricError(Exception): pass
+class RubricError(Exception):
+    pass
 
 
 @dataclass
@@ -33,7 +34,6 @@ class RubricSection:
 
 
 class Rubric:
-
     def __init__(self):
         self.sections: list[RubricSection] = []
 
@@ -41,7 +41,7 @@ class Rubric:
         return iter(self.sections)
 
     def read_from_csv(self, filename: str) -> Rubric:
-        with open(filename, "r", encoding='utf-8') as fh:
+        with open(filename, "r", encoding="utf-8") as fh:
             # read the header line
             fh.readline()
 
@@ -52,19 +52,30 @@ class Rubric:
                     continue
 
                 if line[SECTION] != "":
-                    section = RubricSection(line[SECTION], float(line[SECTION_WORTH]), float(line[MINIMUM_POINTS]))
+                    section = RubricSection(
+                        line[SECTION],
+                        float(line[SECTION_WORTH]),
+                        float(line[MINIMUM_POINTS]),
+                    )
                     self.sections.append(section)
 
                 elif line[DEDUCTION_ID] != "":
                     if section is None:
-                        raise RubricError("Your rubric has a deduction which is not part of a section")
+                        raise RubricError(
+                            "Your rubric has a deduction which is not part of a section"
+                        )
                     tests = []
                     if len(line) > DEDUCTION_TESTS:
                         tests = line[DEDUCTION_TESTS].split()
                     skip = []
                     if len(line) > SKIP:
                         skip = line[SKIP].split()
-                    deduction = RubricDeduction(line[DEDUCTION_ID], float(line[DEDUCTION_AMT]),
-                                                line[DEDUCTION_FEEDBACK], tests, skip)
+                    deduction = RubricDeduction(
+                        line[DEDUCTION_ID],
+                        float(line[DEDUCTION_AMT]),
+                        line[DEDUCTION_FEEDBACK],
+                        tests,
+                        skip,
+                    )
                     section.contents.append(deduction)
         return self

@@ -49,14 +49,20 @@ def run_pytest(where: str = "./") -> dict[str, UnitTest]:
 
     # prepare to run the tests
     log_filename = "json_output.jsonl"
-    args = [current_python, "-m", 'pytest', os.path.abspath(where), "--timeout=5",
-            f"--report-log={log_filename}"]
+    args = [
+        current_python,
+        "-m",
+        "pytest",
+        os.path.abspath(where),
+        "--timeout=5",
+        f"--report-log={log_filename}",
+    ]
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = process.communicate()
     ret_code = process.returncode
     if ret_code > 1:
-        print (" ".join(args))
+        print(" ".join(args))
         message = f"{stdout.decode('utf8')}\n{stderr.decode('utf8')}"
         message = message.replace("\n", "\n\n")
         raise RuntimeError(message)
@@ -67,7 +73,6 @@ def run_pytest(where: str = "./") -> dict[str, UnitTest]:
 
 def parse_test_output(log_filename) -> dict[str, UnitTest]:
     if True:
-
         results: dict[str, UnitTest] = {}
 
         with open(log_filename) as jsonl_file:
@@ -115,7 +120,9 @@ class UnitTest:
     Represents a unit test, with truthy-falsy semantics
     """
 
-    def __init__(self, name: str = "", failed: bool = False, message: str = "", size: int = 1):
+    def __init__(
+        self, name: str = "", failed: bool = False, message: str = "", size: int = 1
+    ):
         self.name: str = name
         self.failed: bool = failed
         self.message: str = message
@@ -131,8 +138,15 @@ class UnitTest:
         message1 = message1.strip()
         message2 = message2.strip()
 
-        return f" {connective} ".join((message1, message2)) \
-            if message1 and message2 else message1 if message1 else message2 if message2 else ""
+        return (
+            f" {connective} ".join((message1, message2))
+            if message1 and message2
+            else message1
+            if message1
+            else message2
+            if message2
+            else ""
+        )
 
     def __add__(self, other: UnitTest) -> UnitTest:
         """Combine two tests such that the test fails if /either/ one fail.
@@ -141,7 +155,7 @@ class UnitTest:
             name=f"{self.name} + {other.name}",
             failed=bool(self) or bool(other),
             message=UnitTest._combine_messages("or", self.message, other.message),
-            size=self.size + other.size  # or? max(self.size, other.size)
+            size=self.size + other.size,  # or? max(self.size, other.size)
         )
 
     def __mul__(self, other: UnitTest) -> UnitTest:
@@ -151,7 +165,7 @@ class UnitTest:
             name=f"{self.name} x {other.name}",
             failed=bool(self) and bool(other),
             message=UnitTest._combine_messages("and", self.message, other.message),
-            size=self.size + other.size
+            size=self.size + other.size,
         )
 
     def __sub__(self, other: UnitTest) -> UnitTest:

@@ -35,13 +35,13 @@ def test_to_left_polygon(opening_behind_data):
 
 
 def test_above_polygon(opening_behind_data):
-    point = (5,5.5)
+    point = (5, 5.5)
     ans = is_in_polygon(*point, opening_behind_data)
     assert ans == False
 
 
 def test_below_polygon(opening_behind_data):
-    point = (9.5,10)
+    point = (9.5, 10)
     ans = is_in_polygon(*point, opening_behind_data)
     assert ans == False
 
