@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path("..", "src").resolve()))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "cs-grading-tools"
-copyright = "2025, JAC CS"
+copyright = "2024-26, JAC CS"
 author = "JAC CS"
 
 # -- General configuration ---------------------------------------------------

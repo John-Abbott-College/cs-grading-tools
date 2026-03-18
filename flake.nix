@@ -1,52 +1,42 @@
 {
   description = "Develop Python on Nix with uv";
 
-  inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11"; };
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+  };
 
-  outputs = { nixpkgs, ... }:
+  outputs =
+    { nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
       forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-    in {
-      devShells = forAllSystems (system:
+    in
+    {
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           pythonEnvPkgs = with pkgs; [
             python314
-            uv # Modern Python dependency manager replacing virtualenv and pip
+            uv
+            # Uncomment if necessary
+            # pythonManylinuxPackages.manylinux2014Package
+            # pythonManylinuxPackages.manylinux1
+            # pythonManylinuxPackages.manylinux_x_y
           ];
-          pythonCLibraries = with pkgs; [
-            # On Nix at least, a few C-libraries are needed explicitly for LD path.
-            gcc
-            stdenv.cc.cc.lib
-            zlib
-            libglvnd
-            libxkbcommon
-            fontconfig.dev
-            libx11
-            glib.dev
-            freetype
-            zstd
-            dbus
-            libxcb-cursor
-            wayland
-          ];
-          allPackages = pythonEnvPkgs ++ pythonCLibraries;
-
-        in {
-          default = pkgs.mkShell {
-            packages = allPackages;
-            shellHook = ''
-              # Inspired by: https://github.com/miklevin/python_nix_flake/blob/main/flake.nix#L138
-              export LD_LIBRARY_PATH=${
-                pkgs.lib.makeLibraryPath allPackages
-              }:$LD_LIBRARY_PATH
-              export QT_QPA_PLATFORM="wayland"
-              unset PYTHONPATH
+          allPackages = pythonEnvPkgs;
+          fhs = pkgs.buildFHSEnv {
+            name = "py-uv-fhs";
+            targetPkgs = pkgs: allPackages;
+            profile = ''
               uv sync
-              . .venv/bin/activate
+              source .venv/bin/activate
             '';
           };
-        });
+        in
+        {
+          default = fhs.env;
+        }
+      );
     };
 }

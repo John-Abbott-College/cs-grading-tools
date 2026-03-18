@@ -6,6 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Sandy Bultena", email = "pallyloco@gmail.com" },
     { name = "Ian Clement", email = "Ian.Celement@johnabbott.qc.ca" },
+    { name = "Youmna Badawy", email = "Youmna.Badawy@johnabbott.qc.ca" },
     { name = "Michael Haaf", email = "michael.haaf@johnabbott.qc.ca" },
 ]
 requires-python = ">=3.13"
