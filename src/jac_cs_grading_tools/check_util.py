@@ -1,15 +1,15 @@
 import difflib
+import importlib.util
+import inspect
+import json
+import os
+import platform
+import subprocess
+import sys
 from functools import partial
 from io import StringIO
-import os
-import subprocess
-import json
-import platform
-import inspect
 from types import ModuleType
 from typing import Callable, Optional
-import importlib.util
-import sys
 
 linter = "/usr/local/bin/pylint"
 if platform.system() == "Windows":
@@ -97,8 +97,6 @@ def import_plus(
     try:
         code_obj = compile(new_source, module.__spec__.origin, "exec")
         exec(code_obj, module.__dict__)
-        a = module.__spec__.origin
-        b = module.__dict__
         pass
     except EOFError:
         sys.stdin = sys.__stdin__
@@ -233,7 +231,9 @@ def check_match_exact(
     for d in difflib.ndiff(
         expected,
         actual,
-        linejunk=lambda l: l.strip() == "" if skip_empty_lines else lambda _: False,
+        linejunk=lambda line: line.strip() == ""
+        if skip_empty_lines
+        else lambda _: False,
     ):
         match d[0:2]:
             case "  ":

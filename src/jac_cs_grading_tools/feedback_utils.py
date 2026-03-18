@@ -1,9 +1,10 @@
 import os
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-import re
 from typing import Optional, TextIO
+
 from jac_cs_grading_tools.grading import Grading
 
 OUTPUT_COMMENTS: list[tuple[range, str]] = [
@@ -162,7 +163,6 @@ class MarkDownFormat:
 
     @staticmethod
     def student_info(student: Student, evaluation: Grading, comment: str) -> str:
-        late_penalty = evaluation.late_penalty()
         final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
         return f"""
 |                 |                                                                                                   |
