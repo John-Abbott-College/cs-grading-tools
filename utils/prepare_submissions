@@ -49,19 +49,19 @@ clean_unnecessary_directories() {
   local submissions_dir="${1}"
 
   echo "finding and removing .idea"
-  find $submissions_dir -type d -name '.idea' -exec rm -r {} \;
+  find "$submissions_dir" -type d -name '.idea' -exec rm -r {} \;
 
   echo "finding and removing venv"
-  find $submissions_dir -type d -name 'venv' -exec rm -rf {} \;
+  find "$submissions_dir" -type d -name 'venv' -exec rm -rf {} \;
 
   echo "finding and removing .venv"
-  find $submissions_dir -type d -name '.venv' -exec rm -rf {} \;
+  find "$submissions_dir" -type d -name '.venv' -exec rm -rf {} \;
 
   echo "finding and removing __MACOSX"
-  find $submissions_dir -type d -name '__MACOSX' -exec rm -rf {} \;
+  find "$submissions_dir" -type d -name '__MACOSX' -exec rm -rf {} \;
 
   echo "finding and removing __pycache__"
-  find $submissions_dir -type d -name '__pycache__' -exec rm -rf {} \;
+  find "$submissions_dir" -type d -name '__pycache__' -exec rm -rf {} \;
 }
 
 ###################################
@@ -69,7 +69,7 @@ clean_unnecessary_directories() {
 ###################################
 
 submissions_dir=$1
-[[ ! -d "${submissions_dir}" ]] && error "${submissions_dir1} does not exist, try another directory."
+[[ ! -d "${submissions_dir}" ]] && error "${submissions_dir} does not exist, try another directory."
 
 clean_directory_names "${submissions_dir}" && echo "Finished checking directory names."
 clean_unnecessary_directories "${submissions_dir}" && echo "Finished clearing unnecessary directories."
