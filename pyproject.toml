@@ -1,6 +1,6 @@
 [project]
 name = "jac-cs-grading-tools"
-version = "1.0.0-rc"
+version = "0.1.0a0"
 description = "Tools for managing assignment grading in JAC CS."
 readme = "README.md"
 authors = [
