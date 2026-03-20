@@ -38,6 +38,11 @@ a sub-process!
 def run_pytest(where: str = "./") -> dict[str, UnitTest]:
     """
     Run unit tests in the specified directory and create a labeled dictionary of the results.
+
+    :param where: [TODO:description]
+    :raises FileNotFoundError: [TODO:throw]
+    :raises RuntimeError: [TODO:throw]
+    :return: [TODO:return]
     """
     if not os.path.isdir(where):
         raise FileNotFoundError(f"Testing directory '{where}' does not exist")
@@ -70,6 +75,12 @@ def run_pytest(where: str = "./") -> dict[str, UnitTest]:
 
 
 def parse_test_output(log_filename) -> dict[str, UnitTest]:
+    """[TODO:description]
+
+    :param log_filename: [TODO:parameter]
+    :type log_filename: [TODO:description]
+    :return: [TODO:return]
+    """
     if True:
         results: dict[str, UnitTest] = {}
 
@@ -116,6 +127,11 @@ def parse_test_output(log_filename) -> dict[str, UnitTest]:
 class UnitTest:
     """
     Represents a unit test, with truthy-falsy semantics
+
+    :param name: [TODO:attribute]
+    :param failed: [TODO:attribute]
+    :param message: [TODO:attribute]
+    :param size: [TODO:attribute]
     """
 
     def __init__(
@@ -131,8 +147,17 @@ class UnitTest:
 
     @staticmethod
     def _combine_messages(connective: str, message1: str, message2: str):
-        """join two messages together with connective if both messages are non-blank,
-        else just the non-blank message"""
+        """
+        join two messages together with connective if both messages are non-blank,
+        else just the non-blank message
+
+        :param connective: [TODO:description]
+        :param message1: [TODO:description]
+        :param message2: [TODO:description]
+        :return: [TODO:return]
+        :rtype: [TODO:description]
+        """
+
         message1 = message1.strip()
         message2 = message2.strip()
 

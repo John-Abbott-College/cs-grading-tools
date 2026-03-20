@@ -3,21 +3,17 @@ import importlib.util
 import inspect
 import json
 import os
-import platform
+import shutil
 import subprocess
 import sys
 from functools import partial
 from io import StringIO
 from types import ModuleType
 from typing import Callable, Optional
+from modulefinder import Module
 
-linter = "/usr/local/bin/pylint"
-if platform.system() == "Windows":
-    linter = "I don't know !"
-elif platform.system() == "Darwin":  # mac
-    linter = "/usr/local/bin/pylint"
-elif platform.system() == "Linux":
-    linter = "/user/local/bin/pylint"
+
+linter = shutil.which("pylint")
 
 
 # ============================================================================
@@ -142,6 +138,42 @@ def import_file(f: str) -> tuple[ModuleType, STDOUT, STDERR, str]:
 
 
 # ============================================================================
+# See docstring
+# ============================================================================
+def ensure_no_top_level_io(m: str):
+    """Ensure there are no top level IO statements in a module."""
+
+    # unload any previous version
+    if m in sys.modules:
+        del sys.modules[m]
+
+    sys.stdin = StringIO()
+    sys.stdout = StringIO()
+    try:
+        _ = __import__(m)
+    except EOFError:
+        sys.stdin = sys.__stdin__
+        sys.stdout = sys.__stdout__
+        raise TopLevelCodeIOException(
+            "You have written code outside of the `main()` function.\n\nRemember that to write all your code "
+            "between the line `def main():` and `if __name__ == ...` and each line has to be indented by "
+            "at least 4 spaces!\n"
+        )
+
+    sys.stdout.seek(0)
+    lines = sys.stdout.readlines()
+    sys.stdin = sys.__stdin__
+    sys.stdout = sys.__stdout__
+
+    if len(lines) != 0:
+        raise TopLevelCodeIOException(
+            "You have written code outside of the `main()` function.\n\nRemember that to write all your code "
+            "between the line `def main():` and `if __name__ == ...` and each line has to be indented by "
+            "at least 4 spaces!\n"
+        )
+
+
+# ============================================================================
 # runs a function while supplied inputs to stdin
 # ============================================================================
 def run_function_with_io(
@@ -202,6 +234,11 @@ def how_many_parameters_in_function(foo: Callable) -> int:
 # has an explicit return statement
 # ============================================================================
 def explicit_return_in_function(foo: Callable) -> bool:
+    """[TODO:description]
+
+    :param foo: [TODO:description]
+    :return: [TODO:return]
+    """
     import ast
     import inspect
 
@@ -209,6 +246,19 @@ def explicit_return_in_function(foo: Callable) -> bool:
         isinstance(node, ast.Return)
         for node in ast.walk(ast.parse(inspect.getsource(foo)))
     )
+
+
+# ============================================================================
+# Module contains function
+# ============================================================================
+def contains_func(student_code: Module, func_name: str) -> bool:
+    """Check if the module contains a function with the specified name.
+
+    :param student_code: [TODO:description]
+    :param func_name: [TODO:description]
+    :return: [TODO:return]
+    """
+    return hasattr(student_code, func_name)
 
 
 # ============================================================================

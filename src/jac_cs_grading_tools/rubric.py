@@ -19,6 +19,15 @@ class RubricError(Exception):
 
 @dataclass
 class RubricDeduction:
+    """[TODO:description]
+
+    :param id: [TODO:attribute]
+    :param amount: [TODO:attribute]
+    :param feedback: [TODO:attribute]
+    :param tests: [TODO:attribute]
+    :param skip_tests: [TODO:attribute]
+    """
+
     id: str
     amount: float
     feedback: str
@@ -28,6 +37,14 @@ class RubricDeduction:
 
 @dataclass
 class RubricSection:
+    """[TODO:description]
+
+    :param name: [TODO:attribute]
+    :param worth: [TODO:attribute]
+    :param min_worth: [TODO:attribute]
+    :param contents: [TODO:attribute]
+    """
+
     name: str
     worth: float
     min_worth: float = 0.0
@@ -35,6 +52,11 @@ class RubricSection:
 
 
 class Rubric:
+    """[TODO:description]
+
+    :param sections: [TODO:attribute]
+    """
+
     def __init__(self):
         self.sections: list[RubricSection] = []
 

@@ -3,7 +3,15 @@ from dataclasses import dataclass
 
 
 class Grading:
-    """Class that holds the various sections and deductions for each section"""
+    """
+    Class that holds the various sections and deductions for each section
+
+    :param title: [TODO:attribute]
+    :param days_late: [TODO:attribute]
+    :param penalty_per_day: [TODO:attribute]
+    :param rubric: [TODO:attribute]
+    :param manual_input: [TODO:attribute]
+    """
 
     def __init__(self, manual_input: bool = True):
         self._sections: dict[str, Section] = {}

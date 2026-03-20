@@ -4,6 +4,12 @@ from jac_cs_grading_tools.unit_test import UnitTest
 
 
 def run_tests(this_rubric: Rubric, results: dict[str, UnitTest]) -> Grading:
+    """[TODO:description]
+
+    :param this_rubric: [TODO:description]
+    :param results: [TODO:description]
+    :return: [TODO:return]
+    """
     grading = Grading()
 
     for section_info in this_rubric:

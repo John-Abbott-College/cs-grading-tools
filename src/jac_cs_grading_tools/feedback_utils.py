@@ -71,6 +71,13 @@ def give_feedback(
     source_files: list[str] = None,
     file_prefix: str = "",
 ):
+    """[TODO:description]
+
+    :param student: [TODO:description]
+    :param evaluation: [TODO:description]
+    :param source_files: [TODO:description]
+    :param file_prefix: [TODO:description]
+    """
     student_prefix = f"{file_prefix}{student.id}_{student.name}"
     feedback_file = f"{student_prefix}.md"
     grading_csv = f"{student_prefix}.csv"
@@ -88,6 +95,12 @@ def give_feedback(
 
 
 def print_grades(student: Student, evaluation: Grading, file: TextIO = sys.stdout):
+    """[TODO:description]
+
+    :param student: [TODO:description]
+    :param evaluation: [TODO:description]
+    :param file: [TODO:description]
+    """
     final_grade = max(evaluation.grade() - evaluation.late_penalty(), 0)
     file.write(f"{student.name},{student.id},{final_grade},See LEA for feedback.")
 
@@ -95,6 +108,14 @@ def print_grades(student: Student, evaluation: Grading, file: TextIO = sys.stdou
 def print_evaluation(
     student: Student, evaluation: Grading, file: TextIO = sys.stdout, source_files=None
 ):
+    """[TODO:description]
+
+    :param source_files: [TODO:parameter]
+    :type source_files: [TODO:description]
+    :param student: [TODO:description]
+    :param evaluation: [TODO:description]
+    :param file: [TODO:description]
+    """
     if source_files is None:
         source_files = []
 
@@ -153,6 +174,8 @@ def print_evaluation(
 # Markdown formatted template
 # =============================================================================
 class MarkDownFormat:
+    """[TODO:description]"""
+
     @staticmethod
     def header():
         return ""
