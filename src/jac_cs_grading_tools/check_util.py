@@ -281,9 +281,9 @@ def check_match_exact(
     for d in difflib.ndiff(
         expected,
         actual,
-        linejunk=lambda line: line.strip() == ""
-        if skip_empty_lines
-        else lambda _: False,
+        linejunk=lambda line: (
+            line.strip() == "" if skip_empty_lines else lambda _: False
+        ),
     ):
         match d[0:2]:
             case "  ":

@@ -1,4 +1,3 @@
-
 from jac_cs_grading_tools.grading import Grading
 import os
 import sys
