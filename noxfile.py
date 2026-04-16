@@ -53,7 +53,7 @@ def release(session: nox.Session) -> None:
     Invokes bump-my-version with the positional argument setting the version.
 
     Usage:
-    $ nox -s release -- [major|minor|patch|pre_l]
+    $ nox -s release -- [major|minor|patch]
 
     Reference:
     - https://nox.thea.codes/en/stable/cookbook.html
@@ -67,8 +67,8 @@ def release(session: nox.Session) -> None:
         type=str,
         nargs="?",
         help="The type of semver release to make.",
-        choices={"major", "minor", "patch", "pre_l"},
-        default="pre_l",
+        choices={"major", "minor", "patch"},
+        default="patch",
     )
     args: argparse.Namespace = parser.parse_args(args=session.posargs)
 
