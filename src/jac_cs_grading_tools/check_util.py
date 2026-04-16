@@ -11,6 +11,7 @@ from io import StringIO
 from types import ModuleType
 from typing import Callable, Optional
 from modulefinder import Module
+from pathlib import Path
 
 
 linter = shutil.which("pylint")
@@ -68,7 +69,7 @@ def import_plus(
     # foo.FooBar() now works
     """
 
-    module_name = os.path.splitext(file)[0]
+    module_name = Path(file).stem
 
     # unload any previous version
     if module_name in sys.modules:
