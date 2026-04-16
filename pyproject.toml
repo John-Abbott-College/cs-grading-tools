@@ -29,6 +29,9 @@ dev = [
     "pytest>=9.0.3",
     "pytest-json-report>=1.5.0",
     "ruff>=0.15.10",
+    "bump-my-version>=1.3.0",
+]
+pdf_report = [
     "weasyprint>=68.1",
 ]
 course = [

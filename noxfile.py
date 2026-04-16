@@ -53,7 +53,7 @@ def release(session: nox.Session) -> None:
     Invokes bump-my-version with the positional argument setting the version.
 
     Usage:
-    $ nox -s release -- [major|minor|patch]
+    $ nox -s release -- [major|minor|patch|pre_l]
 
     Reference:
     - https://nox.thea.codes/en/stable/cookbook.html
@@ -72,14 +72,10 @@ def release(session: nox.Session) -> None:
     )
     args: argparse.Namespace = parser.parse_args(args=session.posargs)
 
-    session.install("bump-my-version")
-
     release: str = args.release
 
     session.log(f"Bumping the {release!r} version.")
-    session.log("Current version:")
     session.run("bump-my-version", "show", "current_version")
-    session.log("New version:")
     session.run("bump-my-version", "show", "--increment", release, "new_version")
 
     confirm = input(
@@ -88,6 +84,8 @@ def release(session: nox.Session) -> None:
 
     if confirm.lower().strip() != "y":
         session.error(f"You said no when prompted to bump the {release!r} release.")
+
+    session.run("bump-my-version", "bump", release)
 
     session.log("Pushing the new tag")
     session.run("git", "push", external=True)
