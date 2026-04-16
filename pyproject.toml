@@ -52,6 +52,7 @@ weasyprint = { git = "https://github.com/Kozea/WeasyPrint" }
 # values = ["dev", "rc", "final"]
 # optional_value = "final"
 
+# TODO: consider removing bump-my-version and just using uv version --bump instead.
 [tool.bumpversion]
 current_version = "0.1.1"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
