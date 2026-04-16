@@ -1,7 +1,39 @@
+from pathlib import Path
+
 from jac_cs_grading_tools import check_util
 
+from types import ModuleType
 
-def test_import_plus():
+import pytest
+
+
+# TODO: determine where to store test file strings
+# Options:
+#   - per-test
+#   - fixture files
+# Considerations:
+#   - discoverability, shareability, documentability
+@pytest.fixture
+def file_under_test(importable_python_file: Path):
+    content = """
+def foo(a,b,c):
+    pass
+    """
+    importable_python_file.write_text(content, encoding="utf-8")
+    return importable_python_file
+
+
+# TODO: actual requirements testing instead of just testing that the function call works
+def test_import_plus(importable_python_file: Path):
+    content = """
+def foo(a,b,c):
+    pass
+    """
+    importable_python_file.write_text(content, encoding="utf-8")
+    module, stdout, stderr, source = check_util.import_plus(str(importable_python_file))
+    assert module.foo
+    assert len(stderr) == 0
+    assert source == content
     assert True
 
 
