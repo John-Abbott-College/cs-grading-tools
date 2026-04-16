@@ -12,6 +12,8 @@ Hopefully this will also have a tutorial, geared for SN1 but perhaps 6P3 as well
 
 source/grading_tools/README
 source/grading_tools/usage
+source/grading_tools/tips
+source/grading_tools/philosophy
 source/grading_tools/reference
 apidocs/index
 ```
