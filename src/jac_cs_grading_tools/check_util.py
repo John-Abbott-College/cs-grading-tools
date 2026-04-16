@@ -10,7 +10,6 @@ from functools import partial
 from io import StringIO
 from types import ModuleType
 from typing import Callable, Optional
-from modulefinder import Module
 from pathlib import Path
 
 
@@ -252,7 +251,7 @@ def explicit_return_in_function(foo: Callable) -> bool:
 # ============================================================================
 # Module contains function
 # ============================================================================
-def contains_func(student_code: Module, func_name: str) -> bool:
+def contains_func(student_code: ModuleType, func_name: str) -> bool:
     """Check if the module contains a function with the specified name.
 
     :param student_code: [TODO:description]
