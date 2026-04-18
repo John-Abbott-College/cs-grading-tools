@@ -59,7 +59,7 @@ jobs:
                   uv sync --locked --all-extras --dev
 
             - name: Setup Nox
-              uses: wntrlblm/nox@2025.05.01
+              uses: wntrblm/nox@2025.05.01
 
             - name: Run nox tests
               run: nox -s tests -- tests

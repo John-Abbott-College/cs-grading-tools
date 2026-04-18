@@ -1,0 +1,23 @@
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: "v5.0.0"
+      hooks:
+          - id: check-case-conflict
+          - id: check-merge-conflict
+          - id: end-of-file-fixer
+          - id: trailing-whitespace
+
+    - repo: local
+      hooks:
+          - id: nox-lint
+            name: Lint
+            entry: nox -s lint --
+            language: system
+            types: [python]
+            require_serial: true
+          - id: nox-format
+            name: Format
+            entry: nox -s format --
+            language: system
+            types: [python]
+            require_serial: true
