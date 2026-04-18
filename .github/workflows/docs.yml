@@ -1,10 +1,11 @@
-name: Publish Docs
+name: docs
 
-# TODO: instead of on push, on...?
 on:
     push:
         branches:
             - main
+        paths:
+            - "docs/**"
 
 jobs:
     build:
