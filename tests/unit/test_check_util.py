@@ -5,20 +5,33 @@ from jac_cs_grading_tools import check_util
 import pytest
 
 
+import sys
+import os
+from typing import Generator, Any
+
 # TODO: determine where to store test file strings
 # Options:
 #   - per-test
 #   - fixture files
 # Considerations:
 #   - discoverability, shareability, documentability
+
+
 @pytest.fixture
-def file_under_test(importable_python_file: Path):
-    content = """
-def foo(a,b,c):
-    pass
+def importable_python_file(tmp_path) -> Generator[Path, Any, None]:
+    """Create a temporary python file that can be imported.
+
+    Reference
+    - https://pytest-with-eric.com/pytest-best-practices/pytest-tmp-path/
+    - https://learn.microsoft.com/en-us/training/modules/python-advanced-pytest/4-fixtures
     """
-    importable_python_file.write_text(content, encoding="utf-8")
-    return importable_python_file
+    sys.path.append(str(tmp_path))
+    init_file_path: Path = tmp_path / "__init__.py"
+    init_file_path.touch()
+    tmp_file_path: Path = tmp_path / "testfile.py"
+    yield tmp_file_path
+    sys.path.remove(str(tmp_path))
+    os.remove(tmp_file_path)
 
 
 # TODO: actual requirements testing instead of just testing that the function call works
