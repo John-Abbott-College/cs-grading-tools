@@ -1,4 +1,4 @@
-name: lint and test
+name: verify pre-commit
 
 on:
     pull_request:
@@ -7,7 +7,7 @@ on:
         branches: [main]
 
 jobs:
-    lint-and-test:
+    verify-pre-commit:
         runs-on: ubuntu-latest
 
         steps:
@@ -36,6 +36,3 @@ jobs:
 
             - name: Run pre-commit
               run: uv run pre-commit run -a --show-diff-on-failure
-
-            - name: Run nox tests
-              run: uv run nox -s tests -- tests

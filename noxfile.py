@@ -10,6 +10,7 @@ nox.options.sessions = []
 @nox_uv.session(
     python=["3.10", "3.11", "3.12", "3.13", "3.14"],
     uv_groups=["dev"],
+    uv_quiet=True,
 )
 def tests(session: nox.Session) -> None:
     """
@@ -21,10 +22,10 @@ def tests(session: nox.Session) -> None:
     Reference:
     - https://edward-jazzhands.github.io/posts/python-testing-with-nox-and-uv/
     """
-    session.run("pytest", *session.posargs)
+    session.run("pytest", "-q", *session.posargs)
 
 
-@nox_uv.session(uv_groups=["dev"])
+@nox_uv.session(uv_groups=["dev"], uv_quiet=True)
 def lint(session: nox.Session) -> None:
     """
     Checks for linting errors in codebase using ruff.
@@ -35,7 +36,7 @@ def lint(session: nox.Session) -> None:
     session.run("ruff", "check")
 
 
-@nox_uv.session(uv_groups=["dev"])
+@nox_uv.session(uv_groups=["dev"], uv_quiet=True)
 def format(session: nox.Session) -> None:
     """
     Checks for linting errors in codebase using ruff.
@@ -46,7 +47,7 @@ def format(session: nox.Session) -> None:
     session.run("ruff", "format")
 
 
-@nox_uv.session(uv_groups=["dev"])
+@nox_uv.session(uv_groups=["dev"], uv_quiet=True)
 def release(session: nox.Session) -> None:
     """
     Kicks off an automated release process by creating and pushing a new tag.

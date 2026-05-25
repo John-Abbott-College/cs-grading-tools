@@ -11,13 +11,19 @@ repos:
       hooks:
           - id: nox-lint
             name: Lint
-            entry: nox -s lint --
+            entry: uv run nox -s lint --
             language: system
             types: [python]
             require_serial: true
           - id: nox-format
             name: Format
-            entry: nox -s format --
+            entry: uv run nox -s format --
             language: system
             types: [python]
             require_serial: true
+          - id: nox-tests
+            name: Tests
+            pass_filenames: false
+            entry: uv run nox -s tests -- tests
+            language: system
+            types: [python]
