@@ -2,6 +2,7 @@ import nox
 import nox_uv
 import argparse
 
+
 nox.options.default_venv_backend = "uv"
 nox.options.sessions = []
 
@@ -72,11 +73,18 @@ def release(session: nox.Session) -> None:
     )
     args: argparse.Namespace = parser.parse_args(args=session.posargs)
 
+    git_status = session.run("git", "status", "-s", external=True, silent=True)
+
+    if git_status != "":
+        session.error(
+            f"You have unstaged changes. Commit or remove them before creating a new release.\n{git_status}"
+        )
+
     release: str = args.release
 
     session.log(f"Bumping the {release!r} version.")
-    session.run("bump-my-version", "show", "current_version")
-    session.run("bump-my-version", "show", "--increment", release, "new_version")
+    session.run("uv", "version")
+    session.run("uv", "version", "--dry-run", "--bump", release)
 
     confirm = input(
         f"You are about to bump the {release!r} release. Are you sure? [y/n]: "
@@ -85,11 +93,15 @@ def release(session: nox.Session) -> None:
     if confirm.lower().strip() != "y":
         session.error(f"You said no when prompted to bump the {release!r} release.")
 
-    session.run("bump-my-version", "bump", release)
+    session.run("uv", "version", "--bump", release)
 
-    session.log("Pushing the new tag")
+    new_version = session.run("uv", "version", "--short", silent=True)
+
+    session.run("git", "tag", "-a", f"v{new_version}", "-m", release, external=True)
     session.run("git", "push", external=True)
     session.run("git", "push", "--tags", external=True)
+
+    session.log(f"Version has been bumped to {new_version}.")
 
 
 if __name__ == "__main__":
