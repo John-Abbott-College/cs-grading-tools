@@ -6,4 +6,3 @@
 * ( /5) Throw Rocks? :heavy_check_mark:
 * ( /5) Code Quality? :heavy_check_mark:
 * ( /5) Questions? :heavy_check_mark:
-    

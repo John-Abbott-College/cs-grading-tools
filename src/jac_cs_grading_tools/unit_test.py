@@ -21,10 +21,10 @@ import sys
 # -------------------------------------------------------------------------
 """
 https://docs.pytest.org/en/7.1.x/how-to/usage.html
-Calling pytest.main() will result in importing your tests and any modules that they import. 
-Due to the caching mechanism of python’s import system, making subsequent calls to 
-pytest.main() from the same process will not reflect changes to those files between the calls. 
-For this reason, making multiple calls to pytest.main() from the same process (in order to 
+Calling pytest.main() will result in importing your tests and any modules that they import.
+Due to the caching mechanism of python’s import system, making subsequent calls to
+pytest.main() from the same process will not reflect changes to those files between the calls.
+For this reason, making multiple calls to pytest.main() from the same process (in order to
 re-run tests, for example) is not recommended.
 
 Since we may run multiple tests with the same name, we need to run pytest as

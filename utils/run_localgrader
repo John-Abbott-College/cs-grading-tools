@@ -175,4 +175,3 @@ else
   fi
   for D in "${dirs[@]}"; do grade_student_dir "${D}/"; done
 fi
-

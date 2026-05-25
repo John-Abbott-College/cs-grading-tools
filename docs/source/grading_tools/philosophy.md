@@ -4,7 +4,7 @@
 
 **It is not a one-to-one mapping between tests and grades.**
 
-For example, if code cannot read the input `csv` file, then the rest of the code can certainly not pass any of the other tests.  
+For example, if code cannot read the input `csv` file, then the rest of the code can certainly not pass any of the other tests.
 
 **Students should not be penalized doubly for failing tests**
 
@@ -61,8 +61,8 @@ How will you be grading?
 
 For this student's code, the assessment will be divided into two:
 
-* Distance Calculation 
-* Point Operations 
+* Distance Calculation
+* Point Operations
 
 ### Create the test file
 
@@ -133,7 +133,7 @@ def test_point_addition():
 From the command line, run the following:
 
 ```bash
-python3 -m autograder.generate_evaluation_code_from_test_file evaluation.py test_file.py 
+python3 -m autograder.generate_evaluation_code_from_test_file evaluation.py test_file.py
 ```
 
 This will create a file called `evaluation.py` based on what is in the test file.
@@ -156,16 +156,16 @@ This will create a file called `evaluation.py` based on what is in the test file
     * `options.ExtractStudentInfoFrom.LEA` - gets the student's username, id from the filename that LEA outputs (*default*)
 
     * `options.ExtractStudentInfoFrom.LEA` - gets the student's username, id from the filename that LEA outputs, and extracts the student's first name by read a csv file (NOT IMPLEMENTED)
-  
+
   * `options.set_output_type`: what will be the file format of the evaluation results
-  
+
     * `options.OutputType.MARKDOWN` (*default*)
     * `options.OutputType.LATEX` (*not implemented well*)
-  
+
   * `options.set_unit_test_type`: what type of unit tests are you running?
-  
+
     * `options.UNIT_TEST_TYPE.PYTEST`: runs `pytest *.py` (*default*)
-  
+
   ```python
   options.set_get_student_info_from(options.ExtractStudentInfoFrom.LEA)
   options.set_output_type(options.OutputType.MARKDOWN)
@@ -211,7 +211,7 @@ All of the unit tests are executed, but if there is a fatal error, the feedback 
 Note that the `code` is an arbitrary number, and can be changed to suit your own needs.
 
 ```python
-    
+
     # -------------------------------------------------------------------------
     # if you can't run the unit tests, fail miserable and bail-out
     # -------------------------------------------------------------------------
@@ -299,9 +299,9 @@ def set_up_processor(test_source_dir: str,
 if __name__ == "__main__":
     processor = set_up_processor(test_source_dir=test_source_directory,
                                  other_required_files=other_files)
-                                 
+
     processor.run_tests_for_each_student(assignment_directory)
-    
+
     # processor.run_tests_for_single_student(
     #                 StudentInfo(path_to_student_folder=student_source_directory)
     #                 )
@@ -313,7 +313,7 @@ Where necessary, edit the evaluation file by replaceing the appropriate `TODO`s 
 
 However, the assumption is that the grade deductions are not always a one-to-one match between test and deduction.  In this example, we want:
 
-* If the student fails the tests for both the linear and city block calculations, the deduction should be `15` 
+* If the student fails the tests for both the linear and city block calculations, the deduction should be `15`
 * If the student fails the linear calculation, but not the city calculation, the deduction should be `10`
 * if the student fails the city calculation, but not the linear calculation, the deduction should be `10`.
 
@@ -355,7 +355,7 @@ If I run the modified evaluation file for a single student, it will create a fee
 
 
 > # Assignment [5.0/20]
-> 
+>
 > |           |                                     |
 > |-----------|-------------------------------------|
 > | StudentID | 0000                                |
@@ -364,16 +364,13 @@ If I run the modified evaluation file for a single student, it will create a fee
 > | Late      | - 0.00   ( 0.00 days)         |
 > | Grade     | 5.00 -  0.00 |
 > | Final Grade     | 5.00 out of 20 ( 25.00%) |
-> 
+>
 > **Comment**
-> 
+>
 > See me and we can go over this assignment.
-> 
+>
 > ### Results:
 > * **Distance Calculation [5.0/15]**
 >   * linear distance between (2,1) and (0,0) should be ~2.236, you calculated 2.828 and city distance between (2,1) and (1,1) should be 1, you calculated 0  [-10.0]
 > * **Point Operations [0.0/5]**
 >   * Problem adding points. For example (1, 2) + (3, 4) should be (4, 6) but your code gives ({p.x}, {p.y}).  [-5.0]
-
-
-

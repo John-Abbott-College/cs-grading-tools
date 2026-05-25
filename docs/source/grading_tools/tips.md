@@ -12,9 +12,9 @@ Only files that start with `test` will be run during the testing phase (unless y
 
 Inside each function, tests will pass or fail depending on the `assert` function.
 
-`assert` takes two parameters... a boolean, and a string (optional).  
+`assert` takes two parameters... a boolean, and a string (optional).
 
-```python 
+```python
 assert boolean, "string that explains the test"
 ```
 
@@ -34,7 +34,7 @@ def sample_set() -> Set[Student]:
     return set
 
 def test_add_duplicate(sample_set):
-    assert not sample_set.add(Student(3, "Vaast Marc")), \	
+    assert not sample_set.add(Student(3, "Vaast Marc")), \
     							"ID 3 already exists, should not create new student"
     assert not sample_set.add(Student(8, "Cleena Moana")), \
     							"ID 8 already exists, should not create new student"
@@ -57,20 +57,20 @@ def clear_list():
   test_list.clear()
   test_list.append(1)
   test_list.append(2)
-  
+
 def test_append_to_list():
   # clear_list has been called before this executes
   test_list.append(3)
   test_list.append(4)
   assert len(test_list) == 4
-  
+
 def test_extend_to_list(extend_list):
   # clear_list has been called before this executes
 	# extend_list was called because it was specified in the parameter list
   test_list.extend(extend_list)
   assert len(test_list) == 6
-  
-  
+
+
 ```
 
 ### Equality of `float`s
@@ -128,22 +128,22 @@ import student_code
 def has_docstrings(module_or_class, classname="", names: Optional[list[str]] = None) -> list[str]:
     if names is None:
         names = []
-    
+
     # only look at attributes that are not private (not start with "_")
     for name in (n for n in dir(module_or_class) if not n.startswith("_")):
-        
+
         # get the actual attribute instead of the name
         attr = getattr(module_or_class, name)
-        
+
         # ignore variables so only look at classes and functions
         if isfunction(attr) or isclass(attr):
              if attr.__doc__ is None:
                 names.append(f"{classname}{name}")
-            
+
             # if it is a class, then look at the contents of the class
             if isclass(attr):
                 _ = has_docstrings(attr, classname=f"{classname}.{name}", names=names)
-    
+
     return names
 
 
@@ -189,15 +189,15 @@ import json
 linter = "/usr/local/bin/pylint"
 
 def pylint(file:str,type:str="error")->list[str]:
-    
+
     if os.path.exists(linter):
-        
+
         # pylint file, but have the output in json
         args = [linter, "--output-format=json",file]
 
         # run the process
         process = subprocess.Popen(args, stdout=subprocess.PIPE)
-				
+
         # get the ouput from stdout
         data = process.communicate()[0].decode('utf-8')
         infos:list[dict[str:str]] = json.loads(data)
@@ -207,17 +207,17 @@ def pylint(file:str,type:str="error")->list[str]:
         for info in (i for i in infos if i['type'] == type):
             error_list.append(f"line: {info['line']}: {info['message']}")
         return error_list
-    
+
     else:
         return ["Install pylint!!!"]
 
-      
+
 def test_no_errors():
     error_list = pylint("student_code.py")
     if len(error_list) != 0:
         assert False, f"You have the following errors: {error_list}"
     assert True
-    
+
 def test_no_warnings():
     warnings_list = pylint("student_code.py","warning")
     if len(warnings_list) != 0:
@@ -290,24 +290,24 @@ import re
 
 def run_code(func:Callable[[],None], inputs: list[str]) -> list[str]:
     """run code with required stdin inputs, and return stdout outputs"""
-    
+
     # define stdin as string IO, with each input separted by "\n"
     sys.stdin = StringIO("\n".join(inputs))
-    
+
     # define stdout as a string IO
     sys.stdout = StringIO()
-    
+
     # run code
     func()
-    
+
     # reset the stdout file to the beginning of the file and read all the lines
     sys.stdout.seek(0)
     lines = sys.stdout.readlines()
-    
+
     # reset stdin/stdout to the 'real' stdin/stdout
     sys.stdin = sys.__stdin__
     sys.stdout = sys.__stdout__
-    
+
     # return the output
     return lines
 
@@ -326,7 +326,7 @@ def test_division_integer():
     output = run_code(sc.main, ["17","5"])
     for line in output:
         if "integer" in line:
-            # looking for a 3 followed by anything that is not a "." or 
+            # looking for a 3 followed by anything that is not a "." or
             # another digit
             assert re.search(r'3[^.\d]',line), "Integer division should be 3"
 
@@ -366,7 +366,7 @@ def plot_area_under_curve_with_rectangles(width, x0: float, x1: float, x_data, y
     plt.ylabel("y(x)")
     plt.xlabel("x")
     plt.show()
-    
+
 def curve(x):
     return x**2 + 2*x + 3
 
@@ -453,7 +453,7 @@ def y_data():
 @pytest.fixture
 def plot_graph(x_data, y_data, clear_matplotlib_axes):
   sc.plot_area_under_curve_with_rectangles(2,0,10,x_data,y_data)
-  
+
 
 def test_plotting(plot_graph):
     assert True, "managed to plot without crashing.  Yay!"

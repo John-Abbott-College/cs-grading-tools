@@ -257,4 +257,3 @@ returns a list of variables that were not used
 #### <u>`check_match_exact(expected: list[str], actual: list[str], skip_empty_lines: bool = False) -> str`</u>
 
 Uses `ndiff` to compare two lists (similar to what you would get if you used `diff` on a linux machine)
-

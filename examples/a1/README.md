@@ -84,10 +84,10 @@ The rubric *csv* file has the following columns
 * **S_Worth**
   * The maximum worth or value of this section
 * **Min Points**
-  * The minimum points that this section is allowed to be 
+  * The minimum points that this section is allowed to be
     * For example, I tend to give no points for code quality, but allow the value of Code Quality to be as low as 10% of the total grade
     * Typically, min points will be zero
-* **Deduction ID**, 
+* **Deduction ID**,
   * Hopefully a unique *id* for this particular deduction (deductions belong to sections)
 * **Deduction amt**
   * How much to deduct if the tests fail
