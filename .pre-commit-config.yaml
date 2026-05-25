@@ -24,6 +24,6 @@ repos:
           - id: nox-tests
             name: Tests
             pass_filenames: false
-            entry: uv run nox -s tests -- tests
+            entry: uv run nox -s tests -- -q tests
             language: system
             types: [python]

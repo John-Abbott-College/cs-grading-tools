@@ -25,13 +25,17 @@ def importable_python_file(tmp_path) -> Generator[Path, Any, None]:
     - https://pytest-with-eric.com/pytest-best-practices/pytest-tmp-path/
     - https://learn.microsoft.com/en-us/training/modules/python-advanced-pytest/4-fixtures
     """
-    sys.path.append(str(tmp_path))
     init_file_path: Path = tmp_path / "__init__.py"
-    init_file_path.touch()
     tmp_file_path: Path = tmp_path / "testfile.py"
+    init_file_path.touch()
+    tmp_file_path.touch()
+    sys.path.append(str(tmp_path))
+    sys.path.append(str(tmp_file_path))
     yield tmp_file_path
     sys.path.remove(str(tmp_path))
+    sys.path.remove(str(tmp_file_path))
     os.remove(tmp_file_path)
+    os.remove(init_file_path)
 
 
 # TODO: actual requirements testing instead of just testing that the function call works
@@ -45,7 +49,6 @@ def foo(a,b,c):
     assert module.foo
     assert len(stderr) == 0
     assert source == content
-    assert True
 
 
 def test_import_file_with_dummy_dummy_inputs():

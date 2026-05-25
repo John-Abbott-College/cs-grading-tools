@@ -22,7 +22,7 @@ def tests(session: nox.Session) -> None:
     Reference:
     - https://edward-jazzhands.github.io/posts/python-testing-with-nox-and-uv/
     """
-    session.run("pytest", "-q", *session.posargs)
+    session.run("pytest", *session.posargs)
 
 
 @nox_uv.session(uv_groups=["dev"], uv_quiet=True)
