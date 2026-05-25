@@ -19,34 +19,34 @@ def opening_in_front_data():
 def test_inside_polygon(opening_behind_data):
     point = (6, 3)
     ans = is_in_polygon(*point, opening_behind_data)
-    assert ans == True
+    assert ans
 
 
 def test_to_right_polygon(opening_behind_data):
     point = (1, 1.9)
     ans = is_in_polygon(*point, opening_behind_data)
-    assert ans == False
+    assert not ans
 
 
 def test_to_left_polygon(opening_behind_data):
     point = (11, 3)
     ans = is_in_polygon(*point, opening_behind_data)
-    assert ans == False
+    assert not ans
 
 
 def test_above_polygon(opening_behind_data):
     point = (5, 5.5)
     ans = is_in_polygon(*point, opening_behind_data)
-    assert ans == False
+    assert not ans
 
 
 def test_below_polygon(opening_behind_data):
     point = (9.5, 10)
     ans = is_in_polygon(*point, opening_behind_data)
-    assert ans == False
+    assert not ans
 
 
 def test_closed_the_polygon(opening_in_front_data):
     point = (6, 3)
     ans = is_in_polygon(*point, opening_in_front_data)
-    assert ans == True
+    assert ans

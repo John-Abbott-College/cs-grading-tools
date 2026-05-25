@@ -1,6 +1,3 @@
-from jac_cs_grading_tools import pytest_util
-
-
 def test_is_word_in_file():
     assert True
 

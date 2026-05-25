@@ -1,6 +1,3 @@
-from jac_cs_grading_tools import grading
-
-
 class TestGrading:
     def test_add_section(self):
         assert True

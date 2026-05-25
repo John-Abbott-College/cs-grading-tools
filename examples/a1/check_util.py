@@ -184,7 +184,7 @@ def ensure_no_top_level_io(m: str):
     sys.stdin = StringIO()
     sys.stdout = StringIO()
     try:
-        module = __import__(m)
+        _ = __import__(m)
     except EOFError:
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
@@ -220,7 +220,9 @@ def check_match_exact(
     for d in difflib.ndiff(
         expected,
         actual,
-        linejunk=lambda l: l.strip() == "" if skip_empty_lines else lambda _: False,
+        linejunk=lambda line: (
+            line.strip() == "" if skip_empty_lines else lambda _: False
+        ),
     ):
         match d[0:2]:
             case "  ":

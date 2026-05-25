@@ -13,7 +13,7 @@ from typing import Callable, Optional
 from pathlib import Path
 
 
-linter = shutil.which("pylint")
+LINTER = shutil.which("pylint")
 
 
 # ============================================================================
@@ -33,8 +33,56 @@ class TopLevelCodeIOException(Exception):
     """There is read/writes in top level code"""
 
 
+NEW_LINE = "\n"
 STDERR = list[str]
 STDOUT = list[str]
+
+
+# ============================================================================
+# diagnostics
+# ============================================================================
+def check_for_error(files_to_test: list[str]) -> tuple[bool, str]:
+    """Checks a list of files for errors. Returns boolean and error message(s) if applicable."""
+    linters = list(map(get_linter_info, files_to_test))
+
+    for linter in linters:
+        errors, _ = errors_and_warnings(linter)
+
+    if len(errors) == 0:
+        return False, ""
+    else:
+        return (
+            True,
+            f"""
+You have the following errors:
+{NEW_LINE.join(errors)}
+Please fix them and resubmit.
+""",
+        )
+
+
+def check_if_io_issue(files_to_test):
+    """Checks a list of files for top-level print/input statements.
+    Returns boolean and error message(s) if applicable.
+    """
+    try:
+        for file in files_to_test:
+            sc = os.path.splitext(file)[0]
+            ensure_no_top_level_io(sc)
+        return False, ""
+    except TopLevelCodeIOException:
+        return (
+            True,
+            """
+You have input()/print() statements outside of your functions and/or the if __name__ == '__main__' section.
+These are not needed for this assignment -- please remove all print() and/or input() statements and resubmit.
+""",
+        )
+    except Exception as e:
+        return (
+            True,
+            f"The following error prevents your code from being autograded: {e}",
+        )
 
 
 # ============================================================================
@@ -320,10 +368,10 @@ def check_match_exact(
 # =============================================================================
 
 
-def get_linter_info(file) -> list[dict[str:str]]:
+def get_linter_info(file: str) -> list[dict[str:str]]:
     infos = []
-    if os.path.exists(linter):
-        args = [linter, "--output-format=json", file]
+    if Path(LINTER).exists():
+        args = [LINTER, "--output-format=json", file]
 
         process = subprocess.Popen(args, stdout=subprocess.PIPE)
 
@@ -332,7 +380,7 @@ def get_linter_info(file) -> list[dict[str:str]]:
         infos: list[dict[str:str]] = json.loads(linter_output)
 
     else:
-        raise ValueError("path to pylint does not exist!!!")
+        raise ValueError("Path to python linter does not exist.")
 
     return infos
 

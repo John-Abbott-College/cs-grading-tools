@@ -1,4 +1,5 @@
 import pytest
+import ast
 
 import temperatures as t
 from csv_temperature_indices import MAX_TEMP, MIN_TEMP, DATE_TIME
@@ -46,7 +47,7 @@ def index_and_temps_for_date():
 
 def test_read_airport_temperatures_return_type():
     sig = inspect.signature(t.__getattribute__("read_airport_temperatures"))
-    sig_parameters = sig.parameters
+    # sig_parameters = sig.parameters
     sig_return = sig.return_annotation
     assert sig_return is None
 
@@ -54,14 +55,14 @@ def test_read_airport_temperatures_return_type():
 def test_read_airport_temperatures_parameter_types():
     sig = inspect.signature(t.__getattribute__("read_airport_temperatures"))
     sig_parameters = sig.parameters
-    sig_return = sig.return_annotation
+    # sig_return = sig.return_annotation
     assert len(sig_parameters) == 1
     assert sig_parameters["filename"].annotation is str
 
 
 def test_get_list_of_unique_years_return_type():
     sig = inspect.signature(t.__getattribute__("get_list_of_unique_years"))
-    sig_parameters = sig.parameters
+    # sig_parameters = sig.parameters
     sig_return = sig.return_annotation
     assert sig_return in [list[int], list[float]]
 
@@ -69,13 +70,13 @@ def test_get_list_of_unique_years_return_type():
 def test_get_list_of_unique_years_parameter_types():
     sig = inspect.signature(t.__getattribute__("get_list_of_unique_years"))
     sig_parameters = sig.parameters
-    sig_return = sig.return_annotation
+    # sig_return = sig.return_annotation
     assert len(sig_parameters) == 0
 
 
 def test_get_extreme_temperature_count_return_type():
     sig = inspect.signature(t.__getattribute__("get_extreme_temperature_count"))
-    sig_parameters = sig.parameters
+    # sig_parameters = sig.parameters
     sig_return = sig.return_annotation
     assert sig_return is int
 
@@ -83,7 +84,7 @@ def test_get_extreme_temperature_count_return_type():
 def test_get_extreme_temperature_count_parameter_types():
     sig = inspect.signature(t.__getattribute__("get_extreme_temperature_count"))
     sig_parameters = sig.parameters
-    sig_return = sig.return_annotation
+    # sig_return = sig.return_annotation
     assert len(sig_parameters) == 3
     assert sig_parameters["this_year"].annotation in [int, float]
     assert sig_parameters["value"].annotation is float
@@ -92,7 +93,7 @@ def test_get_extreme_temperature_count_parameter_types():
 
 def test_plot_return_type():
     sig = inspect.signature(t.__getattribute__("plot"))
-    sig_parameters = sig.parameters
+    # sig_parameters = sig.parameters
     sig_return = sig.return_annotation
     assert sig_return is None
 
@@ -100,7 +101,7 @@ def test_plot_return_type():
 def test_plot_parameter_types():
     sig = inspect.signature(t.__getattribute__("plot"))
     sig_parameters = sig.parameters
-    sig_return = sig.return_annotation
+    # sig_return = sig.return_annotation
     assert len(sig_parameters) == 0
 
 

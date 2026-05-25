@@ -1,6 +1,3 @@
-from jac_cs_grading_tools import unit_test
-
-
 def test_run_pytest():
     assert True
 

@@ -2,8 +2,6 @@ from pathlib import Path
 
 from jac_cs_grading_tools import check_util
 
-from types import ModuleType
-
 import pytest
 
 

@@ -1,6 +1,3 @@
-from jac_cs_grading_tools import feedback_utils
-
-
 def test_get_student_info_from_lea():
     assert True
 

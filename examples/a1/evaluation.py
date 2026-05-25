@@ -282,7 +282,7 @@ def recipe():
     flour_per_cake = 355
 
     # adapt for whether they used input() or not
-    is_using_var = section.ask_question(
+    _ = section.ask_question(
         "Check the student code: do they use a variable? (n if they use input())",
         "Using input gives a small bonus grade.",
         -2,
