@@ -96,7 +96,7 @@ def release(session: nox.Session) -> None:
 
     session.run("uv", "version", "--bump", release)
 
-    new_version = session.run("uv", "version", "--short", silent=True)
+    new_version = session.run("uv", "version", "--short", silent=True).strip()
 
     session.run("git", "tag", "-a", f"v{new_version}", "-m", release, external=True)
     session.run("git", "push", external=True)
