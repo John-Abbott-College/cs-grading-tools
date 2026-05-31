@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# Ensure uv is set up and on path
+source $HOME/.local/bin/env
+
+cd /autograder/source/ || exit
+
+uv -qq python install 3.13
+uv -qq init
+uv -qq add -r requirements.txt
+uv -qq sync
+
 # needed for turtle
 Xvfb&
 

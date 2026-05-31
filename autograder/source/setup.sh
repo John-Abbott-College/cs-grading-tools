@@ -17,11 +17,3 @@ wget https://github.com/sclevine/yj/releases/download/${YJ_VERSION}/yj_${PLATFOR
 
 # uv: used to install required python versions and libraries
 curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Ensure uv is set up and on path
-source $HOME/.local/bin/env
-
-uv -qq python install 3.13
-uv -qq init
-uv -qq add -r /autograder/source/requirements.txt
-uv -qq sync

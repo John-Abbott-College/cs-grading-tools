@@ -26,20 +26,20 @@ if __name__ == "__main__":
     if IS_GRAPHICAL:
         turtle_comment_out_mainloops(SUBMISSION_FILES)
 
-    Path(PYTEST_RESULTS_JSON).parent.mkdir(parents=True, exist_ok=True)
-    with Path(PYTEST_RESULTS_JSON).open("w") as f:
-        _ = pytest.main(
-            [
-                f"{SOURCE_PREFIX}/pytests",
-                f"--report-log={PYTEST_RESULTS_JSON}",
-            ]
-        )
+    if Path(f"{SOURCE_PREFIX}/pytests").is_dir():
+        Path(PYTEST_RESULTS_JSON).parent.mkdir(parents=True, exist_ok=True)
+        with Path(PYTEST_RESULTS_JSON).open("w") as f:
+            _ = pytest.main(
+                [
+                    f"{SOURCE_PREFIX}/pytests",
+                    f"--report-log={PYTEST_RESULTS_JSON}",
+                ]
+            )
 
     suite = unittest.defaultTestLoader.discover(f"{SOURCE_PREFIX}/tests")
     Path(RESULTS_JSON).parent.mkdir(parents=True, exist_ok=True)
     with Path(RESULTS_JSON).open("w") as f:
         JSONTestRunner(
-            visibility="after_published",
             buffer=True,
             stream=f,
             post_processor=post_processor_sort_by_name,
