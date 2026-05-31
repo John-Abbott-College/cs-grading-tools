@@ -21,9 +21,15 @@ repos:
             language: system
             types: [python]
             require_serial: true
-          - id: nox-tests
-            name: Tests
+          - id: nox-tests3.10
+            name: Tests (Python 3.10)
             pass_filenames: false
-            entry: uv run nox -s tests -- -q tests
+            entry: uv run nox -s tests-3.10 -- -q tests
+            language: system
+            types: [python]
+          - id: nox-tests3.14
+            name: Tests (Python 3.14)
+            pass_filenames: false
+            entry: uv run nox -s tests-3.14 -- -q tests
             language: system
             types: [python]
