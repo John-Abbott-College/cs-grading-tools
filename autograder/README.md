@@ -12,13 +12,13 @@ You can do this by mounting a sample submission into the /autograder/submission 
 Here's an example command; replace the path to the submission, results directory, and Docker image name with the appropriate values.
 
 ```
-docker run --rm -v /path/to/submission:/autograder/submission -v /path/to/results:/autograder/results username/image_name:tag /autograder/run_autograder && cat /path/to/results/results.json
+docker run --rm -v /local/path/to/submission:/autograder/submission -v /local/path/to/results:/autograder/results michaelhaafjac/jac-cs-gradescope:latest /autograder/run_autograder && cat /local/path/to/results/results.json
 ```
 
-or to start an interactive session:
+or to start the docker image in an interactive session:
 
 ```
-docker run --rm -it -v /path/to/submission:/autograder/submission -v /path/to/results:/autograder/results username/image_name:tag bash
+docker run --rm -it -v /local/path/to/submission:/autograder/submission -v /local/path/to/results:/autograder/results michaelhaafjac/jac-cs-gradescope:latest bash
 ```
 
 Minor notes:

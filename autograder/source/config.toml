@@ -1,6 +1,6 @@
 [options]
 graphical           = false
-submission_files    = ["example.py"]
+submission_files    = ["example-no-errors.py", "example-with-errors.py", "example-not-in-submission.py"]
 root_directory      = "/autograder"
 
 [deadlines]
