@@ -1,0 +1,9 @@
+[options]
+graphical           = false
+submission_files    = ["example.py"]
+root_directory      = "/autograder"
+
+[deadlines]
+release_date    = 2026-01-01 23:59:59-05:00
+due_date        = 2111-01-01 23:59:59-05:00
+final_due_date  = 2222-01-01 23:59:59-05:00

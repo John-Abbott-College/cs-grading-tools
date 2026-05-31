@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# needed for turtle
+Xvfb&
+
+# uv run run_pytests.py
+xvfb-run uv run run_tests.py
