@@ -84,21 +84,25 @@ def release(session: nox.Session) -> None:
     release: str = args.release
 
     session.log(f"Bumping the {release!r} version.")
-    session.run("uv", "version")
-    session.run("uv", "version", "--dry-run", "--bump", release)
+    old_version = session.run("uv", "version", "--short", silent=True).strip()
+    new_version = session.run(
+        "uv", "version", "--short", "--dry-run", "--bump", release, silent=True
+    ).strip()
 
     confirm = input(
-        f"You are about to bump the {release!r} release. Are you sure? [y/n]: "
+        f"You are about to bump the {release!r} release: {old_version} → {new_version}. Are you sure? [y/n]: "
     )
 
     if confirm.lower().strip() != "y":
-        session.error(f"You said no when prompted to bump the {release!r} release.")
+        session.error("Exiting.")
+
+    message = f"'Bump version: {old_version} → {new_version}'"
 
     session.run("uv", "version", "--bump", release)
+    session.run("git", "add", ".", external=True)
+    session.run("git", "commit", "-m", message, external=True)
 
-    new_version = session.run("uv", "version", "--short", silent=True).strip()
-
-    session.run("git", "tag", "-a", f"v{new_version}", "-m", release, external=True)
+    session.run("git", "tag", "-a", f"v{new_version}", "-m", message, external=True)
     session.run("git", "push", external=True)
     session.run("git", "push", "--tags", external=True)
 
