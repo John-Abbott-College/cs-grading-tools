@@ -1,3 +1,9 @@
+## v0.1.3 (2026-05-31)
+
+### Fix
+
+- correct import_plus FileNotFoundError raising logic
+
 ## v0.1.2 (2026-05-31)
 
 ### Fix
