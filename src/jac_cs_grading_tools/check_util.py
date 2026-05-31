@@ -66,8 +66,6 @@ def import_plus(
     """
 
     file_path = Path(file)
-    if not file_path.exists():
-        raise FileNotFoundError(f"Missing required file: {file}.\n")
 
     module_name = file_path.stem
 
@@ -77,6 +75,8 @@ def import_plus(
 
     # using import libraries, find the module and get the source code
     spec = importlib.util.find_spec(module_name, None)
+    if spec is None:
+        raise FileNotFoundError(f"Missing required file: {file}.\n")
     source = spec.loader.get_source(module_name)
 
     # modify the source code
