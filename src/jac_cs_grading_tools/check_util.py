@@ -65,7 +65,11 @@ def import_plus(
     # foo.FooBar() now works
     """
 
-    module_name = Path(file).stem
+    file_path = Path(file)
+    if not file_path.exists():
+        raise FileNotFoundError(f"Missing required file: {file}.\n")
+
+    module_name = file_path.stem
 
     # unload any previous version
     if module_name in sys.modules:
@@ -98,11 +102,11 @@ def import_plus(
         raise TopLevelCodeIOException(
             "This file requires more user input than what was expected\n"
         )
-    except SyntaxError:
+    except SyntaxError as e:
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        raise ImportError("Could not compile code, there was a syntax error")
+        raise e
 
     # get the text written to stdout/stderr
     sys.stdout.seek(0)

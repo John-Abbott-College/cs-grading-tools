@@ -48,6 +48,8 @@ default-groups = "all"
 [tool.uv.sources]
 weasyprint = { git = "https://github.com/Kozea/WeasyPrint" }
 
+[tool.ruff]
+extend-exclude = ["autograder/submission"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -56,6 +58,7 @@ version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
 major_version_zero = true
+
 [build-system]
 requires = ["uv_build>=0.9.18,<0.10.0"]
 build-backend = "uv_build"
