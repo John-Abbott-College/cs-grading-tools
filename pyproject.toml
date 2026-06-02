@@ -11,6 +11,7 @@ authors = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "gradescope-tool",
     "pylint>=3.3.9",
 ]
 
@@ -47,6 +48,7 @@ default-groups = "all"
 
 [tool.uv.sources]
 weasyprint = { git = "https://github.com/Kozea/WeasyPrint" }
+gradescope-tool = { git = "https://github.com/michaelhaaf/gradescope" }
 
 [tool.ruff]
 extend-exclude = ["autograder/submission"]
