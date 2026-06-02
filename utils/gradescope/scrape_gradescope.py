@@ -99,30 +99,33 @@ def main():
 
     if args.target == "submissions":
         for member in members:
-            # TODO: could handle the latest/deadline distinction better
+            submission_history = gs.get_past_submissions(course, assignment, member)
+            submission_history = (
+                submission_history if submission_history is not None else []
+            )
+
             if args.deadline:
                 submission_history = [
                     s
-                    for s in gs.get_past_submissions(course, assignment, member)
-                    if dt.fromisoformat(s.created_at)
-                    <= dt.fromisoformat(assignment.due_date)
+                    for s in submission_history
+                    if dt.fromisoformat(s.created_at).timestamp()
+                    <= dt.fromisoformat(assignment.due_date).timestamp()
                 ]
-            else:
-                submission_history = gs.get_past_submissions(course, assignment, member)
 
-            if submission_history is not None:
+            if submission_history:
+                s = max(
+                    submission_history, key=lambda x: dt.fromisoformat(x.created_at)
+                )
                 filename = Path(
-                    f"{assignment_dir}/{member.full_name}_{member.sid}.zip".replace(
+                    f"{assignment_dir}/{member.full_name}_{member.sid}_{s.created_at}.zip".replace(
                         " ", "_"
                     )
                 )
-                print(f"Downloading submission for {member.full_name}.")
-                gs.download_file(
-                    filename,
-                    urljoin(gs.url, submission_history[-1].url + ".zip"),
-                )
+
+                print(f"Downloading: {member.full_name}, {s.created_at}")
+                gs.download_file(str(filename), urljoin(gs.url, s.url + ".zip"))
                 with zipfile.ZipFile(filename, "r") as zip_ref:
-                    Path(filename.with_suffix("")).mkdir()
+                    Path(filename.with_suffix("")).mkdir(exist_ok=True)
                     zip_ref.extractall(filename.with_suffix(""))
             else:
                 print(f"No submissions to download for {member.full_name}.")
@@ -135,7 +138,7 @@ def main():
             f"{assignment_dir}/{assignment.title.replace(' ', '_')}_grades.csv"
         )
         print(f"Downloading grades for {assignment.title} to {filepath}.")
-        save_csv(filepath, df, sep="\t")  # noqa: F405
+        save_csv(str(filepath), df, sep="\t")  # noqa: F405
 
 
 if __name__ == "__main__":
